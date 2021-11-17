@@ -1,5 +1,7 @@
 package puzzles.lunarlanding;
 
+import puzzles.lunarlanding.model.LunarLandingConfig;
+
 /**
  * DESCRIPTION
  * @author YOUR NAME HERE
@@ -14,5 +16,6 @@ public class LunarLanding {
 
     public static void main( String[] args ) {
         System.err.println( "REPLACE THIS METHOD!" );
+        LunarLandingConfig init = new LunarLandingConfig(args[0]);
     }
 }
