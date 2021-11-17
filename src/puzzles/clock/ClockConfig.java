@@ -1,5 +1,7 @@
 package puzzles.clock;
 
+import solver.Configuration;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
