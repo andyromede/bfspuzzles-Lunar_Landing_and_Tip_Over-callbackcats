@@ -4,7 +4,7 @@ import solver.Configuration;
 
 /**
  * DESCRIPTION
- * @author YOUR NAME HERE
+ * @author Maddan Eisenberg
  * November 2021
  */
 public class TipOverConfig implements Configuration {

@@ -2,7 +2,7 @@ package puzzles.tipover.model;
 
 /**
  * DESCRIPTION
- * @author YOUR NAME HERE
+ * @author Maddan Eisenberg
  * November 2021
  */
 public class TipOverModel {

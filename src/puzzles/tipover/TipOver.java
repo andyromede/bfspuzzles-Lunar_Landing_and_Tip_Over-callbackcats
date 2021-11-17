@@ -2,7 +2,7 @@ package puzzles.tipover;
 
 /**
  * DESCRIPTION
- * @author YOUR NAME HERE
+ * @author Maddan Eisenberg
  * November 2021
  */
 public class TipOver {
@@ -13,6 +13,6 @@ public class TipOver {
      */
 
     public static void main( String[] args ) {
-        System.err.println( "REPLACE THIS METHOD!" );
+
     }
 }
