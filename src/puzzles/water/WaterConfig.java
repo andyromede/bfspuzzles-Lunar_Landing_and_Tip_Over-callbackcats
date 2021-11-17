@@ -1,11 +1,10 @@
 package puzzles.water;
 
-import solver.Configuration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class WaterConfig implements Configuration{
+public class WaterConfig {
 
     //the goal
     private int amountEnd;

@@ -1,6 +1,5 @@
 package puzzles.water;
 
-import solver.Configuration;
 import solver.Solver;
 
 import java.util.ArrayList;

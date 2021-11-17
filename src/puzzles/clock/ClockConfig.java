@@ -1,12 +1,11 @@
 package puzzles.clock;
 
-import solver.Configuration;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 
-public class ClockConfig implements Configuration {
+public class ClockConfig {
 
     //private variable for the hours, start, and end
     private int hours, start, end;
