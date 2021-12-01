@@ -74,7 +74,6 @@ public class LunarLandingConfig implements Configuration {
                 System.out.print(" 3. " + fields[2]);
             }
             String s = "";
-            //s += "\t";
             s += "\n";
             s += "   " ;
             for(int col = 0; col < cDim; col++){
@@ -130,40 +129,63 @@ public class LunarLandingConfig implements Configuration {
     }
     @Override
     public Collection<Configuration> getSuccessors() {
+        //a new linked list is created which will hold its successors
         LinkedList<Configuration> successor = new LinkedList<>();
 
-        //if the cursor is at the end of the board, then it returns a blank successor
-        if (row == rDim - 1 && col == cDim-1) {
-            return successor;
-        }
-        //the cursor moves by one cell
-        if(row == rDim-1) {
-            row = 0;
-            col++;
-        }
-        else {
-            row++;
-        }
-        //if the cursor points to a non-empty cell, then a new successor will be
-        // created
-        if(!board[row][col].equals("-")){
-            //Numbered island case
-            LunarLandingConfig numIsland = new LunarLandingConfig(this);
-            successor.add(numIsland);
-            return successor;
-        }
-        //creates new configurations for the sea and island case
-        //and puts either a @ or # into the empty cell specified
+        //a for loop is created to go through the board
+        for(int row = 0; row< rDim; row++){
+            for(int col = 0; col < cDim; col++) {
+                //checks if the cursor hits a figure, ignores "-" and "!"
+                if(!board[row][col].equals("-")||!board[row][col].equals("!")){
+                    //if the cursor hits a figure then it will check for its cardinal directions to see if there is
+                    //another figure in the board
 
-        //island case
-        NurikabeConfig island = new NurikabeConfig(this);
-        island.board[row][col] = "#";
-        successor.add(island);
+                    //checks up
+                    for(int i = row; i > -1; i--){
+                        if(!board[i][col].equals("-")||!board[i][col].equals("!")){
+                            LunarLandingConfig other = new LunarLandingConfig(this);
+                            String temp = other.board[row][col];
+                            other.board[row][col] = "-";
+                            other.board[i+1][col] = temp;
+                            successor.add(other);
+                        }
+                    }
 
-        //sea case
-        NurikabeConfig sea = new NurikabeConfig(this);
-        sea.board[row][col] = "@";
-        successor.add(sea);
+                    //check down
+                    for(int i = row; i < rDim-1; i++){
+                        if(!board[i][col].equals("-")||!board[i][col].equals("!")){
+                            LunarLandingConfig other = new LunarLandingConfig(this);
+                            String temp = other.board[row][col];
+                            other.board[row][col] = "-";
+                            other.board[i-1][col] = temp;
+                            successor.add(other);
+                        }
+                    }
+
+                    //check left
+                    for(int i = col; i > -1; i--){
+                        if(!board[row][i].equals("-")||!board[row][i].equals("!")){
+                            LunarLandingConfig other = new LunarLandingConfig(this);
+                            String temp = other.board[row][col];
+                            other.board[row][col] = "-";
+                            other.board[row][i+1] = temp;
+                            successor.add(other);
+                        }
+                    }
+
+                    //check right
+                    for(int i = col; i < cDim-1; i++){
+                        if(!board[row][i].equals("-")||!board[row][i].equals("!")){
+                            LunarLandingConfig other = new LunarLandingConfig(this);
+                            String temp = other.board[row][col];
+                            other.board[row][col] = "-";
+                            other.board[row][i-1] = temp;
+                            successor.add(other);
+                        }
+                    }
+                }
+            }
+        }
 
         //Successors are returned
         return successor;
@@ -176,14 +198,8 @@ public class LunarLandingConfig implements Configuration {
     }
 
     @Override
-    public Collection<Configuration> getSuccessors() {
-        return null;
-    }
-
-    @Override
     public String toString() {
         String s = "";
-        //s += "\t";
         s += "\n";
         s += "   " ;
         for(int col = 0; col < cDim; col++){
