@@ -32,8 +32,13 @@ public class LunarLanding {
         else{
             //when the correct arguments are provided, then the else code is executed
         }
-        System.err.println( "REPLACE THIS METHOD!" );
         LunarLandingConfig init = new LunarLandingConfig(args[0]);
-        List<Configuration> list = Solver.solve(water);
+        List<Configuration> list = Solver.solve(init);
+        if(list.isEmpty()){
+            System.out.println("No solution");
+        }
+        for(int i = 0; i < list.size(); i++) {
+            System.out.println("Step " + i + ": " + list.get(i));
+        }
     }
 }
