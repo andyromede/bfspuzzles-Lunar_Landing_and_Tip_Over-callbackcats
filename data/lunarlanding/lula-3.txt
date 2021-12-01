@@ -7,3 +7,10 @@ E 4 2
 
 solvable in 2 steps
 25/33 configurations
+
+
+line = XXX
+for(int i = 0; i < TOTAL_LINES_IN_FILE - 4){
+    DO WHATEVER HERE U NEED WITH LETTER AND NUMBERS
+    line = nextLine
+}
