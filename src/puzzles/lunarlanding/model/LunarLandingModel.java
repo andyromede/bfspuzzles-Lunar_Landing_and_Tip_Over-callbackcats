@@ -1,13 +1,69 @@
 package puzzles.lunarlanding.model;
 
+import puzzles.lunarlanding.model.LunarLandingConfig;
+import util.Observer;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * DESCRIPTION
- * @author YOUR NAME HERE
+ * @author Andrew Le
  * November 2021
  */
 public class LunarLandingModel {
 
     private LunarLandingConfig currentConfig;
+
+    private List<Observer< LunarLandingModel, Object> > observers = new LinkedList<>();
+
+
+    public LunarLandingModel() {
+
+    }
+    public void load(String txtFile){
+
+    }
+
+    public void reload(){
+
+    }
+
+    public void choose(int row, int col){
+
+    }
+
+    public void go(String direction){
+
+    }
+
+    public void hint(){
+
+    }
+
+    public void show(){
+
+    }
+
+    public void help(){
+
+    }
+
+    public void quit(){
+
+    }
+
+
+    public void addObserver( Observer< LunarLandingModel, Object > obs ) {
+        this.observers.add(obs);
+    }
+    private void announce( String arg){
+        for ( var obs: this.observers ) {
+            obs.update(this,arg);
+        }
+    }
 
     /*
      * Code here includes...
