@@ -45,7 +45,7 @@ public class Solver {
         queue.add(config);
         predecessors.put(config, null);
         uniqueCounter += 1;
-        System.out.println(config);
+        //System.out.println(config);
         totalCounter += 1;
 
         //while the queue is not empty, the front of the queue will become the current configuration that will
@@ -64,7 +64,7 @@ public class Solver {
                 totalCounter += 1;
                 if(!predecessors.containsKey(nbr)){
                     predecessors.put(nbr, current);
-                    System.out.println(current);
+                    //System.out.println(current);
                     uniqueCounter += 1;
                     queue.add(nbr);
                     //System.out.println("--------------------------------------");

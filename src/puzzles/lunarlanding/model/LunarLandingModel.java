@@ -21,7 +21,9 @@ public class LunarLandingModel {
     private List<Observer< LunarLandingModel, Object> > observers = new LinkedList<>();
 
 
-    public LunarLandingModel() {
+    public LunarLandingModel(String textfile) {
+        LunarLandingConfig config = new LunarLandingConfig(textfile);
+
 
     }
     public void load(String txtFile){

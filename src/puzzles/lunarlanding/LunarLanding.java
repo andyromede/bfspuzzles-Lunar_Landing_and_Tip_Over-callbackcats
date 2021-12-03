@@ -33,7 +33,7 @@ public class LunarLanding
      * Constructor for the PTUI
      */
     public LunarLanding() {
-        this.model = new LunarLandingModel();
+        //this.model = new LunarLandingModel();
         initializeView();
     }
 
@@ -131,5 +131,6 @@ public class LunarLanding
         for(int i = 0; i < list.size(); i++) {
             System.out.println("Step " + i + ": " + list.get(i));
         }
+
     }
 }
