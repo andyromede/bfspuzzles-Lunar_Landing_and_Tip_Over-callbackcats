@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class LunarLandingModel {
 
+    public static int BOARD_SIZE;
     private LunarLandingConfig currentConfig;
 
     private List<Observer< LunarLandingModel, Object> > observers = new LinkedList<>();
