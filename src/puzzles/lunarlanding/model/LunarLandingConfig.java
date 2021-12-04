@@ -1,12 +1,8 @@
 package puzzles.lunarlanding.model;
 
-import puzzles.clock.ClockConfig;
-import puzzles.lunarlanding.LunarLanding;
 import puzzles.lunarlanding.ptui.LunarLandingPTUI;
 import solver.Configuration;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -15,7 +11,43 @@ import java.util.*;
  * November 2021
  */
 public class LunarLandingConfig implements Configuration {
-    public LunarLandingConfig(String filename) { LunarLandingPTUI ptui = new LunarLandingPTUI(filename); }
+    //a board
+    private String[][] board;
+    //dimension of the board
+    private static int rDim;
+    private static int cDim;
+    //lunar lander coordinates
+    private static int rCor;
+    private static int cCor;
+    //cursor
+    private int row;
+    private int col;
+    public LunarLandingConfig(int rDim, int cDim, int rCor, int cCor, ArrayList<String> figureList)
+    {
+        //creates the board and adds the explorer
+        this.rDim = rDim;
+        this.cDim = cDim;
+        this.rCor = rCor;
+        this.cCor = cCor;
+        board = new String[rDim][cDim];
+        for(int row = 0; row< rDim; row++) {
+            for (int col = 0; col < cDim; col++) {
+                board[row][col] = "-";
+            }
+        }
+        board[rCor][cCor] = "!";
+        for (String s : figureList) {
+            String[] fields = s.split(" ");
+            int figureRow = Integer.parseInt(fields[1]);
+            int figureCol = Integer.parseInt(fields[2]);
+            if (board[figureRow][figureCol].equals("!")) {
+                board[figureRow][figureCol] = "!" + fields[0];
+            } else {
+                board[figureRow][figureCol] = fields[0];
+            }
+        }
+        LunarLandingPTUI ptui = new LunarLandingPTUI(this);
+    }
     /**
      * The copy constructor takes a config, other, and makes a full "deep" copy
      * of its instance data.
@@ -28,7 +60,17 @@ public class LunarLandingConfig implements Configuration {
         for(int row = 0; row < rDim; row++){
             System.arraycopy(other.board[row], 0, this.board[row], 0, cDim);
         }
-
+    }
+    public void displayBoard() {
+        for (String[] a : board) {
+            System.out.println();
+            for (String s : a)
+                System.out.print(s + " ");
+        }
+    }
+    public String[][] getBoard()
+    {
+        return board;
     }
     @Override
     public Collection<Configuration> getSuccessors() {
@@ -271,9 +313,6 @@ public class LunarLandingConfig implements Configuration {
         //System.out.println(board.hashCode());
         return Arrays.deepHashCode(board);
     }
-    public void updatePTUI(){
-
-    }
     @Override
     public String toString() {
         String s = "";
@@ -291,14 +330,13 @@ public class LunarLandingConfig implements Configuration {
             s += "\n";
             s += row + " | ";
             for (int col = 0; col < cDim; col++) {
-                if(this.board[row][col] == null){
+                if(board[row][col] == null){
                     s += "-" + "  ";
                 }
                 else
-                    s += this.board[row][col] + " ";
+                    s += board[row][col] + " ";
             }
         }
         return s;
     }
-
 }

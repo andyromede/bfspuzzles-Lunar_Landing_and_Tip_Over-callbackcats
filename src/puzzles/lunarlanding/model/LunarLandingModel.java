@@ -15,15 +15,12 @@ import java.util.List;
  */
 public class LunarLandingModel {
 
-    public static int BOARD_SIZE;
     private LunarLandingConfig currentConfig;
 
     private List<Observer< LunarLandingModel, Object> > observers = new LinkedList<>();
 
 
-    public LunarLandingModel(String textfile) {
-        LunarLandingConfig config = new LunarLandingConfig(textfile);
-
+    public LunarLandingModel() {
 
     }
     public void load(String txtFile){
