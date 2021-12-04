@@ -42,36 +42,13 @@ public class LunarLanding {
             );
         }
         else{
-            try (Scanner in = new Scanner(new File(args[0]))) {
-                // creates the rows and columns
-                String[] line = in.nextLine().split("\\s");
-                int rDim = Integer.parseInt(line[0]);
-                int cDim = Integer.parseInt(line[1]);
-                int rCor = Integer.parseInt(line[2]);
-                int cCor = Integer.parseInt(line[3]);
-                ArrayList<String> figureList = new ArrayList<>();
-                System.out.println(rDim + " " + cDim + " " + rCor + " " + cCor );
-                //goes through the second line and beyond and adds the figures to a list of figures
-                String temp = in.nextLine();
-                while(in.hasNext() && !temp.isEmpty()){
-                    figureList.add(temp);
-                    temp = in.nextLine();
-                }
-                config = new LunarLandingConfig(rDim, cDim, rCor, cCor, figureList);
-                List<Configuration> list = Solver.solve(config);
-                if(list.isEmpty()){
-                    System.out.println("No solution");
-                }
-                for(int i = 0; i < list.size(); i++) {
-                    System.out.println("Step " + i + ": " + list.get(i));
-                }
-            } // try-with-resources, the file is closed automatically
-            catch(FileNotFoundException e){
-                System.out.println("Error: Invalid File Destination");
-
+            config = new LunarLandingConfig(args[0]);
+            List<Configuration> list = Solver.solve(config);
+            if(list.isEmpty()){
+                System.out.println("No solution");
             }
-            catch(NumberFormatException e){
-                System.out.println("Error: Invalid File Format");
+            for(int i = 0; i < list.size(); i++) {
+                System.out.println("Step " + i + ": " + list.get(i));
             }
         }
     }

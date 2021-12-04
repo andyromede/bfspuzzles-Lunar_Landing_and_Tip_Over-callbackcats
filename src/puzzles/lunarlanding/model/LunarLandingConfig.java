@@ -2,7 +2,10 @@ package puzzles.lunarlanding.model;
 
 import puzzles.lunarlanding.ptui.LunarLandingPTUI;
 import solver.Configuration;
+import solver.Solver;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -22,31 +25,48 @@ public class LunarLandingConfig implements Configuration {
     //cursor
     private int row;
     private int col;
-    public LunarLandingConfig(int rDim, int cDim, int rCor, int cCor, ArrayList<String> figureList)
+    public LunarLandingConfig(String filename)
     {
-        //creates the board and adds the explorer
-        this.rDim = rDim;
-        this.cDim = cDim;
-        this.rCor = rCor;
-        this.cCor = cCor;
-        board = new String[rDim][cDim];
-        for(int row = 0; row< rDim; row++) {
-            for (int col = 0; col < cDim; col++) {
-                board[row][col] = "-";
+        try (Scanner in = new Scanner(new File(filename))) {
+            // creates the rows and columns
+            String[] line = in.nextLine().split("\\s");
+            rDim = Integer.parseInt(line[0]);
+            cDim = Integer.parseInt(line[1]);
+            rCor = Integer.parseInt(line[2]);
+            cCor = Integer.parseInt(line[3]);
+            ArrayList<String> figureList = new ArrayList<>();
+            //goes through the second line and beyond and adds the figures to a list of figures
+            String temp = in.nextLine();
+            while(in.hasNext() && !temp.isEmpty()) {
+                figureList.add(temp);
+                temp = in.nextLine();
             }
-        }
-        board[rCor][cCor] = "!";
-        for (String s : figureList) {
-            String[] fields = s.split(" ");
-            int figureRow = Integer.parseInt(fields[1]);
-            int figureCol = Integer.parseInt(fields[2]);
-            if (board[figureRow][figureCol].equals("!")) {
-                board[figureRow][figureCol] = "!" + fields[0];
-            } else {
-                board[figureRow][figureCol] = fields[0];
+            board = new String[rDim][cDim];
+            for(int row = 0; row< rDim; row++) {
+                for (int col = 0; col < cDim; col++) {
+                    board[row][col] = "-";
+                }
             }
+            board[rCor][cCor] = "!";
+            for (String s : figureList) {
+                String[] fields = s.split(" ");
+                int figureRow = Integer.parseInt(fields[1]);
+                int figureCol = Integer.parseInt(fields[2]);
+                if (board[figureRow][figureCol].equals("!")) {
+                    board[figureRow][figureCol] = "!" + fields[0];
+                } else {
+                    board[figureRow][figureCol] = fields[0];
+                }
+            }
+            //LunarLandingPTUI ptui = new LunarLandingPTUI();
+        } // try-with-resources, the file is closed automatically
+        catch(FileNotFoundException e){
+            System.out.println("Error: Invalid File Destination");
+
         }
-        LunarLandingPTUI ptui = new LunarLandingPTUI();
+        catch(NumberFormatException e){
+            System.out.println("Error: Invalid File Format");
+        }
     }
     /**
      * The copy constructor takes a config, other, and makes a full "deep" copy
@@ -61,15 +81,19 @@ public class LunarLandingConfig implements Configuration {
             System.arraycopy(other.board[row], 0, this.board[row], 0, cDim);
         }
     }
-    public void displayBoard() {
-        for (String[] a : board) {
-            System.out.println();
-            for (String s : a)
-                System.out.print(s + " ");
-        }
-    }
-    public String[][] getBoard()
-    {
+//    public void displayBoard() {
+//        for (String[] a : board) {
+//            System.out.println();
+//            for (String s : a)
+//                System.out.print(s + " ");
+//        }
+//    }
+//    public String[][] getBoard()
+//    {
+//        return board;
+//    }
+
+    public String[][] returnBoard(){
         return board;
     }
     @Override
@@ -287,7 +311,6 @@ public class LunarLandingConfig implements Configuration {
         boolean result = true;
         if (other instanceof LunarLandingConfig) {
             LunarLandingConfig o = (LunarLandingConfig) other;
-            //System.out.println(Arrays.deepEquals(this.board, o.board));
             for(int row = 0; row< rDim; row++) {
                 for (int col = 0; col < cDim; col++) {
                     if (!this.board[row][col].equals(o.board[row][col])) {
@@ -317,24 +340,24 @@ public class LunarLandingConfig implements Configuration {
     public String toString() {
         String s = "";
         s += "\n";
-        s += "   " ;
+        s += "  " ;
         for(int col = 0; col < cDim; col++){
-            s += " " + col;
+            s += "  " + col;
         }
         s += "\n";
         s += "   " ;
         for(int col = 0; col < cDim; col++){
-            s += "--";
+            s += "---";
         }
         for(int row = 0; row< rDim; row++) {
             s += "\n";
             s += row + " | ";
             for (int col = 0; col < cDim; col++) {
                 if(board[row][col] == null){
-                    s += "-" + "  ";
+                    s += "-" + "   ";
                 }
                 else
-                    s += board[row][col] + " ";
+                    s += board[row][col] + "  ";
             }
         }
         return s;

@@ -21,12 +21,14 @@ public class LunarLandingPTUI
      * The model for the view and controller.
      */
     private LunarLandingModel model;
+    private LunarLandingConfig config;
 
     /**
      * Constructor for the PTUI
      */
-    public LunarLandingPTUI() {
-        this.model = new LunarLandingModel();
+    public LunarLandingPTUI(String filename) {
+        config = new LunarLandingConfig(filename);
+        this.model = new LunarLandingModel(config);
         initializeView();
     }
 
@@ -37,6 +39,9 @@ public class LunarLandingPTUI
      */
     private void run() {
         Scanner in = new Scanner(System.in);
+        boolean chosen = false;
+        int figureRowCoor = 0;
+        int figureColCoor = 0;
         for (; ; ) {
             System.out.print("> ");
             String line = in.nextLine();
@@ -46,16 +51,40 @@ public class LunarLandingPTUI
                     break;
                 } else if (fields[0].contains("load")) {
                     this.model.load(fields[1]);
-                } else if (fields[0].contains("reload")) {
+                } else if (fields[0].equals("reload")) {
                     this.model.reload();
-                } else if (fields[0].contains("hint")) {
+                } else if (fields[0].equals("hint")) {
                     this.model.hint();
-                } else if (fields[0].contains("show")) {
+                } else if (fields[0].equals("show")) {
                     this.model.show();
-                } else if (fields[0].contains("go")) {
-                    this.model.go(fields[1]);
+
                 } else if (fields[0].contains("choose")) {
-                    this.model.choose(Integer.parseInt(fields[1]), Integer.parseInt(fields[2]));
+                    String[][] board = model.returnBoard();
+                    if(board[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])].equals("-")||board[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])].equals("!")) {
+                        System.out.println("No figure at that position");
+                    }
+                    else{
+                        System.out.println("good");
+                        chosen = true;
+                        figureRowCoor = Integer.parseInt(fields[1]);
+                        figureColCoor = Integer.parseInt(fields[2]);
+                    }
+                } else if (fields[0].equals("go")) {
+                    if(chosen == false){
+                        System.out.println("Choose a character to move first");
+                    }
+                    else {
+                        if (fields[1].equals("north") || fields[1].equals("south") ||
+                                fields[1].equals("east") || fields[1].equals("west")) {
+                            System.out.println("nice");
+                            chosen = false;
+                            System.out.print(figureRowCoor + "" + figureColCoor);
+                            this.model.go(fields[1], figureRowCoor, figureColCoor);
+                        } else
+                            System.out.print("Directions are\n" +
+                                    "[NORTH, EAST, SOUTH, WEST]");
+                    }
+
                 } else {
                     displayHelp();
                 }
@@ -70,11 +99,11 @@ public class LunarLandingPTUI
      */
     public void initializeView() {
         this.model.addObserver(this);
-        update(this.model, null);
+        update(this.model, "notwin");
     }
 
-    private void displayBoard() {
-
+    private void displayBoard(LunarLandingConfig board) {
+        System.out.println(board);
     }
 
     /**
@@ -94,7 +123,13 @@ public class LunarLandingPTUI
 
     @Override
     public void update(LunarLandingModel lunarLandingModel, Object o) {
-        displayBoard();
+        displayBoard(lunarLandingModel.returnConfig());
+
+        // display a win if all cards are face up (not cheating)
+        if(o.equals("win")) {
+            System.out.println( "YOU WIN!" );
+        }
+
     }
 
     /*
@@ -107,7 +142,8 @@ public class LunarLandingPTUI
      * @param args Command line arguments -- unused
      */
     public static void main( String[] args ) {
-        LunarLandingPTUI ptui = new LunarLandingPTUI();
+        System.out.println("New file loaded.");
+        LunarLandingPTUI ptui = new LunarLandingPTUI(args[0]);
         ptui.run();
     }
 }
