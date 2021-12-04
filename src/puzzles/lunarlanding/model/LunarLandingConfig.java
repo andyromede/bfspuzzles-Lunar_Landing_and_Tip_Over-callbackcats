@@ -46,7 +46,7 @@ public class LunarLandingConfig implements Configuration {
                 board[figureRow][figureCol] = fields[0];
             }
         }
-        LunarLandingPTUI ptui = new LunarLandingPTUI(this);
+        LunarLandingPTUI ptui = new LunarLandingPTUI();
     }
     /**
      * The copy constructor takes a config, other, and makes a full "deep" copy
