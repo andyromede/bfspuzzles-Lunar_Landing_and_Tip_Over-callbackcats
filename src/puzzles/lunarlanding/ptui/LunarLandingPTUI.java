@@ -66,7 +66,7 @@ public class LunarLandingPTUI
                         System.out.println("No figure at that position");
                     }
                     else{
-                        System.out.println("good");
+
                         chosen = true;
                         figureRowCoor = Integer.parseInt(fields[1]);
                         figureColCoor = Integer.parseInt(fields[2]);
@@ -78,9 +78,7 @@ public class LunarLandingPTUI
                     else {
                         if (fields[1].equals("north") || fields[1].equals("south") ||
                                 fields[1].equals("east") || fields[1].equals("west")) {
-                            System.out.println("nice");
                             chosen = false;
-                            System.out.print(figureRowCoor + "" + figureColCoor);
                             this.model.go(fields[1], figureRowCoor, figureColCoor);
                         } else
                             System.out.print("Directions are\n" +
@@ -142,7 +140,7 @@ public class LunarLandingPTUI
         if(o.equals("Illegal move")) {
             System.out.println( "Illegal move" );
         }
-        if(o.equals("already solved")){
+        if(o.equals("alreadySolved")){
             System.out.println("Current board is already solved");
         }
         if(o.equals("show")){
@@ -153,6 +151,12 @@ public class LunarLandingPTUI
         }
         if(o.equals("help")) {
             displayHelp();
+        }
+        if(o.equals("newFile")) {
+            System.out.println("File loaded");
+        }
+        if(o.equals("unsolvable")) {
+            System.out.println("Unsolvable board");
         }
     }
 

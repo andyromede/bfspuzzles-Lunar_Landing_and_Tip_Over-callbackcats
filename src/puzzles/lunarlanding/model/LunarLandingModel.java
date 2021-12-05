@@ -40,17 +40,18 @@ public class LunarLandingModel {
         return currentConfig.returnBoard();
     }
     public void load(String txtFile){
-//        LunarLandingConfig config = new LunarLandingConfig(txtFile);
-//        announce("notwin");
-//        System.out.println("New file loaded");
+        LunarLandingConfig config = new LunarLandingConfig(txtFile);
+        currentConfig = config;
+        board = currentConfig.returnBoard();
+        announce("newFile");
     }
 
     public void reload(){
         LunarLandingConfig config = new LunarLandingConfig(reloadFileName);
         currentConfig = config;
-        announce("notwin");
+
         board = currentConfig.returnBoard();
-        System.out.println("New file loaded");
+        announce("newFile");
     }
 
     public void choose(int row, int col){
@@ -58,13 +59,12 @@ public class LunarLandingModel {
     }
 
     public void go(String direction, int row, int col){
-        boolean legal = false;
         int rDim = board.length;
         int cDim = board[0].length;
+        boolean legal = false;
         if(direction.equals("north")){
            //will first check to see if it is a legal
             //checks up
-            System.out.println("works up");
             for (int i = row - 1; i > -1; i--) {
                 if (!board[i][col].equals("-")) {
                     if (this.board[i][col].equals("!")) {
@@ -93,7 +93,7 @@ public class LunarLandingModel {
                                 board[i + 1][col] = "!" + temp;
                             } else {
                                 board[i + 1][col] = temp;
-                                System.out.println("works usadsap");
+
                             }
 
                         }
@@ -109,7 +109,6 @@ public class LunarLandingModel {
         else if(direction.equals("south")){
             //will first check to see if it is a legal
             //checks up
-            System.out.println("works down");
             for (int i = row + 1; i < rDim; i++) {
                 if (!board[i][col].equals("-")) {
                     if (this.board[i][col].equals("!")) {
@@ -153,10 +152,9 @@ public class LunarLandingModel {
         else if(direction.equals("east")){
             //will first check to see if it is a legal
             //checks east
-            System.out.println("works east");
             for (int i = col + 1; i < cDim; i++) {
                 if (!board[row][i].equals("-")) {
-                    if (this.board[i][col].equals("!")) {
+                    if (this.board[row][i].equals("!")) {
                         //do nothing if the cursor is equal to "!"
                     } else {
                         legal = true;
@@ -198,9 +196,8 @@ public class LunarLandingModel {
         else if(direction.equals("west")){
             //will first check to see if it is a legal
             //checks west
-            System.out.println("works west");
             for (int i = col - 1; i > -1; i--) {
-                if (!board[i][col].equals("-")) {
+                if (!board[row][i].equals("-")) {
                     if (this.board[i][col].equals("!")) {
                         //do nothing if the cursor is equal to "!"
                     } else {
@@ -227,7 +224,6 @@ public class LunarLandingModel {
                                 board[row][i + 1] = "!" + temp;
                             } else {
                                 board[row][i + 1] = temp;
-                                System.out.println("works usadsap");
                             }
 
                         }
@@ -250,8 +246,11 @@ public class LunarLandingModel {
         int rDim = board.length;
         int cDim = board[0].length;
         List<Configuration> list = Solver.solve(currentConfig.updateConfig(board));
-        if(list.size() == 1){
-            announce("already solved");
+        if(list.size() == 0){
+            announce("unsolvable");
+        }
+        else if(list.size() == 1){
+            announce("alreadySolved");
         }
         else {
             currentConfig = (LunarLandingConfig) list.get(1);

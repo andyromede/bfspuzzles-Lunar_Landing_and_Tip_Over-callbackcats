@@ -21,7 +21,7 @@ public class LunarLandingGUI extends Application
 
     @Override
     public void start( Stage stage ) {
-        stage.setTitle( "Tip Over" );
+        stage.setTitle( "Lunar Landing" );
         Image spaceship = new Image(
                 LunarLandingGUI.class.getResourceAsStream(
                         "resources" + File.separator + "lander.png"
