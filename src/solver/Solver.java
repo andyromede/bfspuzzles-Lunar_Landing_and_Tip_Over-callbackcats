@@ -52,7 +52,7 @@ public class Solver {
         //be checked for the end configuration or it's predecessors
         while(!queue.isEmpty()){
             current = queue.remove(0);
-           // System.out.println(current);
+            //System.out.println(current);
 
             //if the current configuration is the target, then the method will break
             if(current.isGoal()){
