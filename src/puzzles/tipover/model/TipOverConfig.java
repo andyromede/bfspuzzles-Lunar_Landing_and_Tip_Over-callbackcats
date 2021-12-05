@@ -199,17 +199,142 @@ public class TipOverConfig implements Configuration {
     {
         return board;
     }
+    public String movePlayer(String dir)
+    {
+        if (currCoords[0] == goalCoords[0] && currCoords[1] == goalCoords[1])
+            return "alreadywon";
+        switch (dir.toLowerCase()) {
+            case "south":
+                if (currCoords[0] + 1 >= board.length)
+                {
+                    return "illegal";
+                }
+                else if (board[currCoords[0] + 1][currCoords[1]] != 0)
+                {
+                    currCoords[0] += 1;
+                    break;
+                }
+                else if (board[currCoords[0]][currCoords[1]] != 1)
+                {
+                    for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--) {
+                        if (currCoords[0] + i >= board.length) {
+                            return "illegal";
+                        }
+                        else if (board[currCoords[0] + i][currCoords[1]] != 0) {
+                            return "illegal";
+                        }
+                    }
+                    for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--)
+                    {
+                        board[currCoords[0] + i][currCoords[1]] = 1;
+                    }
+                    board[currCoords[0]][currCoords[1]] = 0;
+                    currCoords[0] += 1;
+                    return "towertopple";
+                }
+                return "illegal";
+            case "north":
+                if (currCoords[0] - 1 < 0)
+                {
+                    return "illegal";
+                }
+                else if (board[currCoords[0] - 1][currCoords[1]] != 0)
+                {
+                    currCoords[0] -= 1;
+                    break;
+                }
+                else if (board[currCoords[0]][currCoords[1]] != 1)
+                {
+                    for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--) {
+                        if (currCoords[0] - i < 0) {
+                            return "illegal";
+                        }
+                        else if (board[currCoords[0] - i][currCoords[1]] != 0) {
+                            return "illegal";
+                        }
+                    }
+                    for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--)
+                    {
+                        board[currCoords[0] - i][currCoords[1]] = 1;
+                    }
+                    board[currCoords[0]][currCoords[1]] = 0;
+                    currCoords[0] -= 1;
+                    return "towertopple";
+                }
+                return "illegal";
+            case "east":
+                if (currCoords[1] + 1 >= board[0].length)
+                {
+                    return "illegal";
+                }
+                else if (board[currCoords[0]][currCoords[1] + 1] != 0)
+                {
+                    currCoords[1] += 1;
+                    break;
+                }
+                else if (board[currCoords[0]][currCoords[1]] != 1)
+                {
+                    for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--) {
+                        if (currCoords[1] + i >= board[0].length) {
+                            return "illegal";
+                        }
+                        else if (board[currCoords[0]][currCoords[1] + i] != 0) {
+                            return "illegal";
+                        }
+                    }
+                    for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--)
+                    {
+                        board[currCoords[0]][currCoords[1] + i] = 1;
+                    }
+                    board[currCoords[0]][currCoords[1]] = 0;
+                    currCoords[1] += 1;
+                    return "towertopple";
+                }
+                return "illegal";
+            case "west":
+                if (currCoords[1] - 1 < 0)
+                {
+                    return "illegal";
+                }
+                else if (board[currCoords[0]][currCoords[1] - 1] != 0)
+                {
+                    currCoords[1] -= 1;
+                    break;
+                }
+                else if (board[currCoords[0]][currCoords[1]] != 1)
+                {
+                    for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--) {
+                        if (currCoords[1] - i >= board[0].length) {
+                            return "illegal";
+                        }
+                        else if (board[currCoords[0]][currCoords[1] - i] != 0) {
+                            return "illegal";
+                        }
+                    }
+                    for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--)
+                    {
+                        board[currCoords[0]][currCoords[1] - i] = 1;
+                    }
+                    board[currCoords[0]][currCoords[1]] = 0;
+                    currCoords[1] -= 1;
+                    return "towertopple";
+                }
+                return "illegal";
+            default:
+                return "invaliddir";
+        }
+        if (currCoords[0] == goalCoords[0] && currCoords[1] == goalCoords[1])
+            return "win";
+        return "show";
+    }
+    public int[] getCurrCoords()
+    {
+        return currCoords;
+    }
+    public int[] getGoalCoords()
+    {
+        return goalCoords;
+    }
     @Override
     public int hashCode() { return Arrays.deepHashCode(board); }
-    @Override
-    public String toString()
-    {
-        String out = "";
-        for (int[] a : board) {
-            out += "\n";
-            for (int i : a)
-                out += i + " ";
-        }
-        return out;
-    }
 }
