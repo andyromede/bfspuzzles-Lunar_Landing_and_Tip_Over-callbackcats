@@ -2,12 +2,15 @@ package puzzles.lunarlanding.model;
 
 import puzzles.lunarlanding.LunarLanding;
 import puzzles.lunarlanding.model.LunarLandingConfig;
+import solver.Configuration;
+import solver.Solver;
 import util.Observer;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 /**
  * DESCRIPTION
@@ -19,12 +22,15 @@ public class LunarLandingModel {
     private LunarLandingConfig currentConfig;
     private String[][] board;
     private List<Observer< LunarLandingModel, Object> > observers;
+    private String reloadFileName;
 
 
-    public LunarLandingModel(LunarLandingConfig config) {
+    public LunarLandingModel(LunarLandingConfig config, String reloadFileName) {
         this.observers = new LinkedList<>();
         currentConfig = config;
         this.board = currentConfig.returnBoard();
+        this.reloadFileName = reloadFileName;
+
     }
 
     public LunarLandingConfig returnConfig(){
@@ -34,11 +40,17 @@ public class LunarLandingModel {
         return currentConfig.returnBoard();
     }
     public void load(String txtFile){
-        System.out.println("New file loaded");
+//        LunarLandingConfig config = new LunarLandingConfig(txtFile);
+//        announce("notwin");
+//        System.out.println("New file loaded");
     }
 
     public void reload(){
-
+        LunarLandingConfig config = new LunarLandingConfig(reloadFileName);
+        currentConfig = config;
+        announce("notwin");
+        board = currentConfig.returnBoard();
+        System.out.println("New file loaded");
     }
 
     public void choose(int row, int col){
@@ -49,8 +61,6 @@ public class LunarLandingModel {
         boolean legal = false;
         int rDim = board.length;
         int cDim = board[0].length;
-        //System.out.println(rDim +" "+ cDim);
-        System.out.println(board[row][col] +" "+ row + " "+ col);
         if(direction.equals("north")){
            //will first check to see if it is a legal
             //checks up
@@ -92,7 +102,7 @@ public class LunarLandingModel {
                 }
             }
             if(!legal){
-                System.out.println("Illegal move");
+                announce("Illegal move");
             }
 
         }
@@ -128,7 +138,6 @@ public class LunarLandingModel {
                                 board[i - 1][col] = "!" + temp;
                             } else {
                                 board[i - 1][col] = temp;
-                                System.out.println("works usadsap");
                             }
 
                         }
@@ -137,7 +146,7 @@ public class LunarLandingModel {
                 }
             }
             if(!legal) {
-                System.out.println("Illegal move");
+                announce("Illegal move");
             }
 
         }
@@ -146,7 +155,7 @@ public class LunarLandingModel {
             //checks east
             System.out.println("works east");
             for (int i = col + 1; i < cDim; i++) {
-                if (!board[i][col].equals("-")) {
+                if (!board[row][i].equals("-")) {
                     if (this.board[i][col].equals("!")) {
                         //do nothing if the cursor is equal to "!"
                     } else {
@@ -173,16 +182,16 @@ public class LunarLandingModel {
                                 board[row][i - 1] = "!" + temp;
                             } else {
                                 board[row][i - 1] = temp;
-                                System.out.println("works usadsap");
                             }
 
                         }
                         announce("notwin");
+                        break;
                     }
                 }
             }
             if(!legal) {
-                System.out.println("Illegal move");
+                announce("Illegal move");
             }
 
         }
@@ -223,11 +232,12 @@ public class LunarLandingModel {
 
                         }
                         announce("notwin");
+                        break;
                     }
                 }
             }
             if(!legal) {
-                System.out.println("Illegal move");
+                announce("Illegal move");
             }
 
         }
@@ -237,21 +247,34 @@ public class LunarLandingModel {
     }
 
     public void hint(){
-
+        int rDim = board.length;
+        int cDim = board[0].length;
+        List<Configuration> list = Solver.solve(currentConfig.updateConfig(board));
+        if(list.size() == 1){
+            announce("already solved");
+        }
+        else {
+            currentConfig = (LunarLandingConfig) list.get(1);
+            board = currentConfig.returnBoard();
+            if (board[rDim / 2][cDim / 2].equals("!E")) {
+                announce("hintwin");
+            } else {
+                announce("hint");
+            }
+        }
     }
 
     public void show(){
-
+        announce("show");
     }
 
     public void help(){
-
+        announce("help");
     }
 
     public void quit(){
-
+        announce("quit");
     }
-
 
     public void addObserver( Observer< LunarLandingModel, Object > obs ) {
         this.observers.add(obs);
