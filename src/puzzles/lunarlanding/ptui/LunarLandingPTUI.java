@@ -28,7 +28,7 @@ public class LunarLandingPTUI
      */
     public LunarLandingPTUI(String filename) {
         config = new LunarLandingConfig(filename);
-        this.model = new LunarLandingModel(config);
+        this.model = new LunarLandingModel(config, filename);
         initializeView();
     }
 
@@ -48,13 +48,15 @@ public class LunarLandingPTUI
             String[] fields = line.split("\\s+");
             if (fields.length > 0) {
                 if (fields[0].contains("quit")) {
-                    break;
-                } else if (fields[0].contains("load")) {
+                    this.model.quit();
+                } else if (fields[0].equals("load")) {
                     this.model.load(fields[1]);
                 } else if (fields[0].equals("reload")) {
                     this.model.reload();
                 } else if (fields[0].equals("hint")) {
                     this.model.hint();
+                } else if (fields[0].equals("help")) {
+                    this.model.help();
                 } else if (fields[0].equals("show")) {
                     this.model.show();
 
@@ -123,13 +125,35 @@ public class LunarLandingPTUI
 
     @Override
     public void update(LunarLandingModel lunarLandingModel, Object o) {
-        displayBoard(lunarLandingModel.returnConfig());
-
+        if(o.equals("notwin")) {
+            displayBoard(lunarLandingModel.returnConfig());
+        }
+        if(o.equals("hintwin")) {
+            displayBoard(lunarLandingModel.returnConfig());
+            System.out.println( "I WIN!" );
+        }
+        if(o.equals("hint")) {
+            displayBoard(lunarLandingModel.returnConfig());
+        }
         // display a win if all cards are face up (not cheating)
         if(o.equals("win")) {
             System.out.println( "YOU WIN!" );
         }
-
+        if(o.equals("Illegal move")) {
+            System.out.println( "Illegal move" );
+        }
+        if(o.equals("already solved")){
+            System.out.println("Current board is already solved");
+        }
+        if(o.equals("show")){
+            displayBoard(lunarLandingModel.returnConfig());
+        }
+        if(o.equals("quit")) {
+            System.exit(0);
+        }
+        if(o.equals("help")) {
+            displayHelp();
+        }
     }
 
     /*

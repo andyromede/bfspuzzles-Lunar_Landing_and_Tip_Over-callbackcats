@@ -74,8 +74,8 @@ public class Solver {
         }
 
         //prints out the unique and total counter
-        System.out.println("Unique Counter: " + uniqueCounter);
-        System.out.println("Total Counter: " + totalCounter);
+        //System.out.println("Unique Counter: " + uniqueCounter);
+        //System.out.println("Total Counter: " + totalCounter);
 
         //After the target has been found, the path is constructed and then returned
         return constructPath(predecessors, config, current);

@@ -81,18 +81,15 @@ public class LunarLandingConfig implements Configuration {
             System.arraycopy(other.board[row], 0, this.board[row], 0, cDim);
         }
     }
-//    public void displayBoard() {
-//        for (String[] a : board) {
-//            System.out.println();
-//            for (String s : a)
-//                System.out.print(s + " ");
-//        }
-//    }
-//    public String[][] getBoard()
-//    {
-//        return board;
-//    }
 
+    public LunarLandingConfig updateConfig(String[][] otherBoard){
+        for(int row = 0; row< rDim; row++) {
+            for (int col = 0; col < cDim; col++) {
+                this.board[row][col] = otherBoard[row][col];
+            }
+        }
+        return this;
+    }
     public String[][] returnBoard(){
         return board;
     }
