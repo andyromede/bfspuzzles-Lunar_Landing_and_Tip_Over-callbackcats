@@ -1,5 +1,10 @@
 package puzzles.tipover.model;
 
+import util.Observer;
+
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * DESCRIPTION
  * @author Maddan Eisenberg
@@ -8,6 +13,14 @@ package puzzles.tipover.model;
 public class TipOverModel {
 
     private TipOverConfig currentConfig;
+    private int[][] board;
+    private LinkedList<Observer<TipOverModel, Object>> observers;
+    public TipOverModel(TipOverConfig config)
+    {
+        this.observers = new LinkedList<>();
+        currentConfig = config;
+        this.board = currentConfig.getBoard();
+    }
 
     /*
      * Code here includes...
@@ -20,4 +33,41 @@ public class TipOverModel {
      *   a cast of Config to TipOverConfig somewhere, since the solve
      *   method works with, and returns, objects of type Configuration.
      */
+    public void load(String filename)
+    {
+
+    }
+    public void reload()
+    {
+
+    }
+    public void move(String dir)
+    {
+
+    }
+    public void hint()
+    {
+
+    }
+    public void show()
+    {
+
+    }
+    public void help()
+    {
+
+    }
+    public void quit()
+    {
+
+    }
+    public void addObserver( Observer<TipOverModel, Object> obs )
+    {
+        this.observers.add(obs);
+    }
+    private void announce(String arg)
+    {
+        for (var obs: this.observers)
+            obs.update(this, arg);
+    }
 }
