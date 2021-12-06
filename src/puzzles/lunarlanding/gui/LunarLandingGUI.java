@@ -97,6 +97,7 @@ public class LunarLandingGUI extends Application
                 buttonList.add(button);
                 //when button is pressed, this happens
                 button.setOnAction((event) -> {
+                    top.setText("");
                     boolean figureInPosition;
                     int pressedRow = button.getRow();
                     int pressedCol = button.getCol();
@@ -249,6 +250,7 @@ public class LunarLandingGUI extends Application
         //reload method triggers when reload button is pressed
         reload.setOnAction((event) -> {
             model.load(filename);
+            top.setText(model.fileLoaded());
         });
         //hint method triggers when hint button is pressed
         hint.setOnAction((event) -> {
@@ -289,7 +291,6 @@ public class LunarLandingGUI extends Application
 
     @Override
     public void update( LunarLandingModel lunarLandingModel, Object o ) {
-        System.out.println( "My model has changed! (DELETE THIS LINE)");
         String[][] board = lunarLandingModel.returnBoard();
         int rDim = board.length;
         int cDim = board[0].length;
@@ -311,18 +312,23 @@ public class LunarLandingGUI extends Application
             temp.setData(board[temp.getRow()][temp.getCol()]);
         }
         if(o.equals("chooseAgain")) {
-            top.setText("No figure at that position");
+            top.setText(model.chooseAgain());
         }
         if(o.equals("Illegal move")) {
-            top.setText("Illegal move");
+            top.setText(model.illegalMove());
         }
-        if(o.equals("notwin")) {
-            top.setText("Illegal move");
+        if(o.equals("hintwin")) {
+            top.setText(model.hintWin());
+        }
+        if(o.equals("win")){
+            top.setText(model.win());
+        }
+        if(o.equals("alreadySolved")){
+            top.setText(model.alreadySolved());
         }
     }
 
     public static void main( String[] args ) {
-        //LunarLandingPTUI ptui = new LunarLandingPTUI(args[0]);
         config = new LunarLandingConfig(args[0]);
         model = new LunarLandingModel(config, args[0]);
         filename = args[0];

@@ -59,8 +59,7 @@ public class LunarLandingPTUI
                     } else if (fields[0].equals("help")) {
                         this.model.help();
                     } else if (fields[0].equals("show")) {
-                        this.model.show();
-
+                        displayBoard(model.returnConfig());
                     } else if (fields[0].contains("choose")) {
                         String[][] board = model.returnBoard();
                         if (board[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])].equals("-") || board[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])].equals("!")) {
@@ -132,20 +131,20 @@ public class LunarLandingPTUI
         }
         if(o.equals("hintwin")) {
             displayBoard(lunarLandingModel.returnConfig());
-            System.out.println( "I WIN!" );
+            System.out.println(model.hintWin());
         }
         if(o.equals("hint")) {
             displayBoard(lunarLandingModel.returnConfig());
         }
         // display a win if all cards are face up (not cheating)
         if(o.equals("win")) {
-            System.out.println( "YOU WIN!" );
+            System.out.println(model.win());
         }
         if(o.equals("Illegal move")) {
-            System.out.println( "Illegal move" );
+            System.out.println(model.illegalMove());
         }
         if(o.equals("alreadySolved")){
-            System.out.println("Current board is already solved");
+            System.out.println(model.alreadySolved());
         }
         if(o.equals("show")){
             displayBoard(lunarLandingModel.returnConfig());
@@ -154,7 +153,7 @@ public class LunarLandingPTUI
             System.exit(0);
         }
         if(o.equals("help")) {
-            displayHelp();
+           System.out.println(model.displayHelp());
         }
         if(o.equals("newFile")) {
             System.out.println("File loaded");

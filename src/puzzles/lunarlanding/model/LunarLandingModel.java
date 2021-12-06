@@ -267,17 +267,40 @@ public class LunarLandingModel {
             }
         }
     }
-
-    public void show(){
-        announce("show");
+    public String hintWin() {
+        return "I WIN!";
     }
-
+    public String win(){
+        return "YOU WIN!";
+    }
+    public String illegalMove(){
+        return "Illegal move";
+    }
+    public String alreadySolved(){
+        return "Already solved";
+    }
+    public String chooseAgain(){
+        return "No figure at that position";
+    }
+    public String fileLoaded(){
+        return "File loaded";
+    }
     public void help(){
         announce("help");
     }
-
     public void quit(){
         announce("quit");
+    }
+    public String displayHelp() {
+        return "Legal commands are...\n" +
+                "\t> help : Show all commands.\n" +
+                "\t> reload filename: Load the most recent file again.\n" +
+                "\t> load filename: Load a new game board file. (1 argument)\n" +
+                "\t> hint : Make the next move for me.\n" +
+                "\t> show : Display the board.\n" +
+                "\t> go {north|south|east|west}: Tell chosen character where to go. (1 argument)\n" +
+                "\t> choose row column: Choose which character moves next. (2 arguments)\n" +
+                "\t> quit";
     }
 
     public void addObserver( Observer< LunarLandingModel, Object > obs ) {
