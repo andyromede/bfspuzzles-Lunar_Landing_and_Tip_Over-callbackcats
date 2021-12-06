@@ -54,8 +54,14 @@ public class LunarLandingModel {
         announce("newFile");
     }
 
-    public void choose(int row, int col){
-        //if()
+    public boolean choose(String data, int row, int col){
+        if(data.equals("-")||data.equals("!")){
+            announce("chooseAgain");
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     public void go(String direction, int row, int col){
