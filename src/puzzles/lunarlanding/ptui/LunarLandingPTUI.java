@@ -47,46 +47,50 @@ public class LunarLandingPTUI
             String line = in.nextLine();
             String[] fields = line.split("\\s+");
             if (fields.length > 0) {
-                if (fields[0].contains("quit")) {
-                    this.model.quit();
-                } else if (fields[0].equals("load")) {
-                    this.model.load(fields[1]);
-                } else if (fields[0].equals("reload")) {
-                    this.model.reload();
-                } else if (fields[0].equals("hint")) {
-                    this.model.hint();
-                } else if (fields[0].equals("help")) {
-                    this.model.help();
-                } else if (fields[0].equals("show")) {
-                    this.model.show();
+                try {
+                    if (fields[0].contains("quit")) {
+                        this.model.quit();
+                    } else if (fields[0].equals("load")) {
+                        this.model.load(fields[1]);
+                    } else if (fields[0].equals("reload")) {
+                        this.model.reload();
+                    } else if (fields[0].equals("hint")) {
+                        this.model.hint();
+                    } else if (fields[0].equals("help")) {
+                        this.model.help();
+                    } else if (fields[0].equals("show")) {
+                        this.model.show();
 
-                } else if (fields[0].contains("choose")) {
-                    String[][] board = model.returnBoard();
-                    if(board[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])].equals("-")||board[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])].equals("!")) {
-                        System.out.println("No figure at that position");
-                    }
-                    else{
+                    } else if (fields[0].contains("choose")) {
+                        String[][] board = model.returnBoard();
+                        if (board[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])].equals("-") || board[Integer.parseInt(fields[1])][Integer.parseInt(fields[2])].equals("!")) {
+                            System.out.println("No figure at that position");
+                        } else {
 
-                        chosen = true;
-                        figureRowCoor = Integer.parseInt(fields[1]);
-                        figureColCoor = Integer.parseInt(fields[2]);
-                    }
-                } else if (fields[0].equals("go")) {
-                    if(chosen == false){
-                        System.out.println("Choose a character to move first");
-                    }
-                    else {
-                        if (fields[1].equals("north") || fields[1].equals("south") ||
-                                fields[1].equals("east") || fields[1].equals("west")) {
-                            chosen = false;
-                            this.model.go(fields[1], figureRowCoor, figureColCoor);
-                        } else
-                            System.out.print("Directions are\n" +
-                                    "[NORTH, EAST, SOUTH, WEST]");
-                    }
+                            chosen = true;
+                            figureRowCoor = Integer.parseInt(fields[1]);
+                            figureColCoor = Integer.parseInt(fields[2]);
+                        }
+                    } else if (fields[0].equals("go")) {
+                        if (chosen == false) {
+                            System.out.println("Choose a character to move first");
+                        } else {
+                            if (fields[1].equals("north") || fields[1].equals("south") ||
+                                    fields[1].equals("east") || fields[1].equals("west")) {
+                                chosen = false;
+                                this.model.go(fields[1], figureRowCoor, figureColCoor);
+                            } else
+                                System.out.print("Directions are\n" +
+                                        "[NORTH, EAST, SOUTH, WEST]");
+                        }
 
-                } else {
-                    displayHelp();
+                    } else {
+                        displayHelp();
+                    }
+                }
+                catch (ArrayIndexOutOfBoundsException e)
+                {
+                    System.out.println("Error: you need to finish the statement.");
                 }
             }
 

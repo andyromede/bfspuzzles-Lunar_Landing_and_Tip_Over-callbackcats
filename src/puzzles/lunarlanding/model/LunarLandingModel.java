@@ -41,17 +41,16 @@ public class LunarLandingModel {
     }
     public void load(String txtFile){
         LunarLandingConfig config = new LunarLandingConfig(txtFile);
-        currentConfig = config;
-        board = currentConfig.returnBoard();
-        announce("newFile");
+        if (config.returnBoard() != null) {
+            reloadFileName = txtFile;
+            currentConfig = config;
+            board = currentConfig.returnBoard();
+            announce("newFile");
+        }
     }
 
     public void reload(){
-        LunarLandingConfig config = new LunarLandingConfig(reloadFileName);
-        currentConfig = config;
-
-        board = currentConfig.returnBoard();
-        announce("newFile");
+        load(reloadFileName);
     }
 
     public boolean choose(String data, int row, int col){

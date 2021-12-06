@@ -29,11 +29,11 @@ public class LunarLandingGUI extends Application
         implements Observer< LunarLandingModel, Object > {
 
     //the config
-    private LunarLandingConfig config = new LunarLandingConfig("data/lunarlanding/lula-4.txt");
+    private LunarLandingConfig config = new LunarLandingConfig("data/lunarlanding/lula-5.txt");
     //the model
-    private LunarLandingModel model = new LunarLandingModel(config, "data/lunarlanding/lula-4.txt");
+    private LunarLandingModel model = new LunarLandingModel(config, "data/lunarlanding/lula-5.txt");
     //a button list for Figure button
-    ArrayList<Button> buttonList = new ArrayList();
+    ArrayList<FigureButton> buttonList = new ArrayList();
 
 
     //an instantiation of the top label text, so it can be used throughout the entre class
@@ -73,9 +73,9 @@ public class LunarLandingGUI extends Application
                 //sets the background colors
                 if(!board[row][col].equals("!")){
                     button.setStyle("-fx-background-color: LightGrey");
-                    if(board[row][col].contains("!")){
-                        button.setStyle("-fx-background-color: Tomato");
-                    }
+                }
+                else{
+                    button.setStyle("-fx-background-color: Tomato");
                 }
                 //sets the images
                 if(!board[row][col].equals("-")){
@@ -98,15 +98,10 @@ public class LunarLandingGUI extends Application
                     int pressedCol = button.getCol();
                     String data = button.getData();
                     figureInPosition = model.choose(data, pressedRow, pressedCol);
-                    if (figureInPosition) {
+                    while(figureInPosition) {
                         directionButton(data, pressedRow, pressedCol);
+                        figureInPosition = false;
                     }
-//                    if(figureInPosition){
-//                        .setOnAction((event) -> {
-//
-//                        });
-//                    }
-
                 });
             }
         }
@@ -152,6 +147,9 @@ public class LunarLandingGUI extends Application
                 }
             }
 
+        }
+        public FigureButton returnButton(int row, int col){
+            return this;
         }
         //returns the row
         public int getRow(){
@@ -271,8 +269,35 @@ public class LunarLandingGUI extends Application
     @Override
     public void update( LunarLandingModel lunarLandingModel, Object o ) {
         System.out.println( "My model has changed! (DELETE THIS LINE)");
+        String[][] board = lunarLandingModel.returnBoard();
+        int rDim = board.length;
+        int cDim = board[0].length;
+        for(int i = 0; i < buttonList.size(); i++){
+            FigureButton temp = buttonList.get(i);
+            if(!board[temp.getRow()][temp.getCol()].equals("-")){
+                if(temp.getData().equals(("!"))){
+
+                }
+                else if(board[temp.getRow()][temp.getCol()].contains("E")){
+                    temp.setGraphic(new ImageView(explorer));
+                    System.out.println("ex works");
+                }
+                else
+                    temp.setGraphic(new ImageView(robotBlue));
+            }
+            else{
+                temp.setGraphic(null);
+            }
+            temp.setData(board[temp.getRow()][temp.getCol()]);
+        }
         if(o.equals("chooseAgain")) {
             top.setText("No figure at that position");
+        }
+        if(o.equals("Illegal move")) {
+            top.setText("Illegal move");
+        }
+        if(o.equals("notwin")) {
+            top.setText("Illegal move");
         }
     }
 
