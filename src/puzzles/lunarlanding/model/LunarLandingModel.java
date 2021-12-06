@@ -203,7 +203,7 @@ public class LunarLandingModel {
             //checks west
             for (int i = col - 1; i > -1; i--) {
                 if (!board[row][i].equals("-")) {
-                    if (this.board[i][col].equals("!")) {
+                    if (this.board[row][i].equals("!")) {
                         //do nothing if the cursor is equal to "!"
                     } else {
                         legal = true;

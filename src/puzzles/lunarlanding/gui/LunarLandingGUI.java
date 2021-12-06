@@ -11,7 +11,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import puzzles.lunarlanding.model.LunarLandingConfig;
 import puzzles.lunarlanding.model.LunarLandingModel;
 import puzzles.lunarlanding.ptui.LunarLandingPTUI;
@@ -28,10 +30,12 @@ import java.util.ArrayList;
 public class LunarLandingGUI extends Application
         implements Observer< LunarLandingModel, Object > {
 
+    private static Stage stage;
     //the config
-    private LunarLandingConfig config = new LunarLandingConfig("data/lunarlanding/lula-5.txt");
+    private static LunarLandingConfig config;
     //the model
-    private LunarLandingModel model = new LunarLandingModel(config, "data/lunarlanding/lula-5.txt");
+    private static LunarLandingModel model;
+    private static String filename;
     //a button list for Figure button
     ArrayList<FigureButton> buttonList = new ArrayList();
 
@@ -170,6 +174,7 @@ public class LunarLandingGUI extends Application
     }
     @Override
     public void start( Stage stage ) {
+        this.stage = stage;
 //        stage.setTitle( "Lunar Landing" );
 //        Image spaceship = new Image(
 //                //"resources" + File.separator + "lander.png"
@@ -223,11 +228,27 @@ public class LunarLandingGUI extends Application
         });
         //load method triggers when reload button is pressed
         load.setOnAction((event) -> {
-            model.load("data/lunarlanding/lula-4.txt");
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Resource File");
+            File temp = fileChooser.showOpenDialog(stage);
+            if (temp != null) {
+                try {
+                    model.load(temp.getPath());
+                    filename = temp.getPath();
+                }
+                catch (Exception e)
+                {
+                    top.setText("This file isn't meant for this.");
+                }
+            }
+            else
+            {
+                top.setText("Illegal file, try again");
+            }
         });
         //reload method triggers when reload button is pressed
         reload.setOnAction((event) -> {
-            model.reload();
+            model.load(filename);
         });
         //hint method triggers when hint button is pressed
         hint.setOnAction((event) -> {
@@ -275,14 +296,13 @@ public class LunarLandingGUI extends Application
         for(int i = 0; i < buttonList.size(); i++){
             FigureButton temp = buttonList.get(i);
             if(!board[temp.getRow()][temp.getCol()].equals("-")){
-                if(temp.getData().equals(("!"))){
-
+                if(board[temp.getRow()][temp.getCol()].contains("!")){
+                    temp.setGraphic(null);
                 }
-                else if(board[temp.getRow()][temp.getCol()].contains("E")){
+                if(board[temp.getRow()][temp.getCol()].contains("E")){
                     temp.setGraphic(new ImageView(explorer));
-                    System.out.println("ex works");
                 }
-                else
+                if(!board[temp.getRow()][temp.getCol()].contains("E") && !board[temp.getRow()][temp.getCol()].equals("!"))
                     temp.setGraphic(new ImageView(robotBlue));
             }
             else{
@@ -303,6 +323,9 @@ public class LunarLandingGUI extends Application
 
     public static void main( String[] args ) {
         //LunarLandingPTUI ptui = new LunarLandingPTUI(args[0]);
-        Application.launch( args );
+        config = new LunarLandingConfig(args[0]);
+        model = new LunarLandingModel(config, args[0]);
+        filename = args[0];
+        Application.launch(args[0]);
     }
 }
