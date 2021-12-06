@@ -4,8 +4,10 @@ import puzzles.tipover.model.TipOverConfig;
 import puzzles.tipover.model.TipOverModel;
 import util.Observer;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -33,27 +35,25 @@ public class TipOverPTUI implements Observer<TipOverModel, Object > {
             System.out.print("> ");
             String line = in.nextLine();
             String[] fields = line.split("\\s+");
-            if (fields.length > 0) {
-                if (fields[0].contains("quit")) {
-                    break;
-                } else if (fields[0].contains("reload")) {
-                    this.model.reload();
-                } else if (fields[0].contains("load")) {
-                    this.model.load(fields[1]);
-                } else if (fields[0].contains("move")) {
-                    this.model.move(fields[1]);
-                } else if (fields[0].contains("hint")) {
-                    this.model.hint();
-                } else if (fields[0].contains("show")) {
-                    this.model.show();
-                } else if (fields[0].contains("help")) {
-                    this.model.help();
-                } else {
-                    System.out.println("Illegal command");
-                    this.model.help();
+            try {
+                switch (fields[0].toLowerCase()) {
+                    case "quit" -> this.model.quit();
+                    case "reload" -> this.model.reload();
+                    case "load" -> this.model.load(fields[1]);
+                    case "move" -> this.model.move(fields[1]);
+                    case "hint" -> this.model.hint();
+                    case "show" -> this.model.show();
+                    case "help" -> this.model.help();
+                    default -> {
+                        System.out.println("Illegal command");
+                        this.model.help();
+                    }
                 }
             }
-
+            catch (ArrayIndexOutOfBoundsException e)
+            {
+                System.out.println("Error: you need to finish the statement.");
+            }
         }
     }
     public void initializeView()

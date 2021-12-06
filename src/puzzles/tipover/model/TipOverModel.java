@@ -6,6 +6,7 @@ import solver.Configuration;
 import solver.Solver;
 import util.Observer;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -18,14 +19,12 @@ import java.util.Locale;
 public class TipOverModel {
 
     private TipOverConfig currentConfig;
-    private int[][] board;
     private LinkedList<Observer<TipOverModel, Object>> observers;
     private String filename;
     public TipOverModel(TipOverConfig config, String filename)
     {
         this.observers = new LinkedList<>();
         currentConfig = config;
-        this.board = currentConfig.getBoard();
         this.filename = filename;
     }
 
@@ -42,17 +41,17 @@ public class TipOverModel {
      */
     public void load(String filename)
     {
-        currentConfig = new TipOverConfig(filename);
-        board = currentConfig.getBoard();
-        System.out.println("New file loaded");
-        announce("show");
+        TipOverConfig tempConfig = new TipOverConfig(filename);
+        if (tempConfig.getBoard() != null) {
+            currentConfig = tempConfig;
+            this.filename = filename;
+            System.out.println("New file loaded");
+            announce("show");
+        }
     }
     public void reload()
     {
-        currentConfig = new TipOverConfig(filename);
-        board = currentConfig.getBoard();
-        announce("newFile");
-        announce("show");
+        load(filename);
     }
     public void move(String dir)
     {
@@ -78,7 +77,7 @@ public class TipOverModel {
     }
     public void show()
     {
-
+        announce("show");
     }
     public void help()
     {
@@ -93,7 +92,7 @@ public class TipOverModel {
     }
     public void quit()
     {
-
+        System.exit(0);
     }
     public void addObserver( Observer<TipOverModel, Object> obs )
     {
