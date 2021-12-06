@@ -23,7 +23,7 @@ public class TipOverPTUI implements Observer<TipOverModel, Object > {
     public TipOverPTUI(String filename)
     {
         config = new TipOverConfig(filename);
-        this.model = new TipOverModel(config);
+        this.model = new TipOverModel(config, filename);
         initializeView();
     }
     public void run()
@@ -36,17 +36,20 @@ public class TipOverPTUI implements Observer<TipOverModel, Object > {
             if (fields.length > 0) {
                 if (fields[0].contains("quit")) {
                     break;
-                } else if (fields[0].contains("load")) {
-                    this.model.load(fields[1]);
                 } else if (fields[0].contains("reload")) {
                     this.model.reload();
+                } else if (fields[0].contains("load")) {
+                    this.model.load(fields[1]);
                 } else if (fields[0].contains("move")) {
                     this.model.move(fields[1]);
                 } else if (fields[0].contains("hint")) {
                     this.model.hint();
                 } else if (fields[0].contains("show")) {
                     this.model.show();
+                } else if (fields[0].contains("help")) {
+                    this.model.help();
                 } else {
+                    System.out.println("Illegal command");
                     this.model.help();
                 }
             }
@@ -56,20 +59,26 @@ public class TipOverPTUI implements Observer<TipOverModel, Object > {
     public void initializeView()
     {
         this.model.addObserver(this);
-        update(this.model, "notwin");
+        update(this.model, "show");
     }
     @Override
     public void update(TipOverModel tipOverModel, Object o) {
         switch ((String) o) {
-            case "show" -> displayBoard(tipOverModel.returnConfig());
+            case "show", "hint" -> displayBoard(tipOverModel.returnConfig());
             case "illegal" -> System.out.println("That move's illegal.");
             case "towertopple" -> {
                 System.out.println("A tower has been tipped over.");
                 displayBoard(tipOverModel.returnConfig());
             }
-            case "invaliddir" -> model.help();
-            case "win" -> System.out.println("YOU WIN!");
+            case "invaliddir" -> System.out.println("Legal directions are\n[NORTH, EAST, SOUTH, WEST]");
+            case "win" -> System.out.println("YOU WON!");
             case "alreadywon" -> System.out.println("You arlready won!");
+            case "newFile" -> System.out.println("New file loaded.");
+            case "hintwin" -> System.out.println("I WON!");
+            case "unsolvable" -> {
+                System.out.println("Unsolvable board");
+                displayBoard(tipOverModel.returnConfig());
+            }
         }
     }
     private void displayBoard(TipOverConfig board)
@@ -79,30 +88,30 @@ public class TipOverPTUI implements Observer<TipOverModel, Object > {
         int[][] tempBoard = board.getBoard();
         String s = "";
         s += "\n";
-        s += "  " ;
+        s += "      " ;
         for(int col = 0; col < tempBoard[0].length; col++){
-            s += "   " + col;
+            s += col + "  ";
         }
         s += "\n";
-        s += "   " ;
+        s += "    " ;
         for(int col = 0; col < tempBoard[0].length; col++){
-            s += "----";
+            s += "___";
         }
         for (int i = 0; i < tempBoard.length; i++)
         {
-            s += "\n" + i + " |";
+            s += "\n " + i + " | ";
             for (int j = 0; j < tempBoard[0].length; j++) {
                 if (tempBoard[i][j] == 0)
                     s += " _";
                 else if (tempLoc[0] == i && tempLoc[1] == j)
-                    s += "!" + tempBoard[i][j];
-                else if (tempGoal[0] == i && tempGoal[1] == j)
                     s += "*" + tempBoard[i][j];
+                else if (tempGoal[0] == i && tempGoal[1] == j)
+                    s += "!" + tempBoard[i][j];
                 else
                     s += " " + tempBoard[i][j];
-                s += "  ";
+                s += " ";
             }
         }
-        System.out.println(s);
+        System.out.println(s + "\n");
     }
 }

@@ -1,7 +1,5 @@
 package puzzles.tipover.model;
 
-import puzzles.lunarlanding.model.LunarLandingConfig;
-import puzzles.tipover.TipOver;
 import solver.Configuration;
 
 import java.io.File;
@@ -66,7 +64,7 @@ public class TipOverConfig implements Configuration {
         if (other instanceof TipOverConfig o)
             for (int i = 0; i < board.length; i++)
                 for (int j = 0; j < board[0].length; j++)
-                    if (this.board[i][j] != o.board[i][j] || this.currCoords != o.currCoords || this.goalCoords != o.goalCoords)
+                    if (this.board[i][j] != o.board[i][j] || !Arrays.equals(this.currCoords, o.currCoords) || !Arrays.equals(this.goalCoords, o.goalCoords))
                         return false;
         return true;
     }
@@ -77,6 +75,7 @@ public class TipOverConfig implements Configuration {
     @Override
     public Collection<Configuration> getSuccessors() {
         LinkedList<Configuration> successor = new LinkedList<>();
+
         //up
         if (currCoords[0] != 0) {
             boolean run = currCoords[0] - 1 != lastVisited[0] || currCoords[1] != lastVisited[1];
@@ -201,7 +200,7 @@ public class TipOverConfig implements Configuration {
     }
     public String movePlayer(String dir)
     {
-        if (currCoords[0] == goalCoords[0] && currCoords[1] == goalCoords[1])
+        if (Arrays.equals(currCoords, goalCoords))
             return "alreadywon";
         switch (dir.toLowerCase()) {
             case "south":
@@ -323,7 +322,7 @@ public class TipOverConfig implements Configuration {
             default:
                 return "invaliddir";
         }
-        if (currCoords[0] == goalCoords[0] && currCoords[1] == goalCoords[1])
+        if (Arrays.equals(currCoords, goalCoords))
             return "win";
         return "show";
     }
@@ -337,4 +336,13 @@ public class TipOverConfig implements Configuration {
     }
     @Override
     public int hashCode() { return Arrays.deepHashCode(board); }
+    @Override
+    public String toString()
+    {
+        String out = "";
+        for (int[] row : board)
+            out += "\n" + Arrays.toString(row);
+        out += "\n" + Arrays.toString(currCoords) + "\n" + Arrays.toString(goalCoords);
+        return out;
+    }
 }
