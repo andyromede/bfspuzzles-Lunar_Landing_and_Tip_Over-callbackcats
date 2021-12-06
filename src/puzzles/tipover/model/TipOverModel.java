@@ -1,6 +1,9 @@
 package puzzles.tipover.model;
 
+import puzzles.lunarlanding.model.LunarLandingConfig;
 import puzzles.tipover.ptui.TipOverPTUI;
+import solver.Configuration;
+import solver.Solver;
 import util.Observer;
 
 import java.util.LinkedList;
@@ -17,11 +20,13 @@ public class TipOverModel {
     private TipOverConfig currentConfig;
     private int[][] board;
     private LinkedList<Observer<TipOverModel, Object>> observers;
-    public TipOverModel(TipOverConfig config)
+    private String filename;
+    public TipOverModel(TipOverConfig config, String filename)
     {
         this.observers = new LinkedList<>();
         currentConfig = config;
         this.board = currentConfig.getBoard();
+        this.filename = filename;
     }
 
     /*
@@ -44,7 +49,10 @@ public class TipOverModel {
     }
     public void reload()
     {
-
+        currentConfig = new TipOverConfig(filename);
+        board = currentConfig.getBoard();
+        announce("newFile");
+        announce("show");
     }
     public void move(String dir)
     {
@@ -52,7 +60,21 @@ public class TipOverModel {
     }
     public void hint()
     {
-
+        List<Configuration> list = Solver.solve(currentConfig);
+        if(list.size() == 0){
+            announce("unsolvable");
+        }
+        else if(list.size() == 1){
+            announce("alreadywon");
+        }
+        else {
+            currentConfig = (TipOverConfig) list.get(1);
+            if (currentConfig.isGoal()) {
+                announce("hintwin");
+            } else {
+                announce("hint");
+            }
+        }
     }
     public void show()
     {
