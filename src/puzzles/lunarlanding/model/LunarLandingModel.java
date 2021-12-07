@@ -14,6 +14,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * DESCRIPTION
+ *
  * @author Andrew Le
  * November 2021
  */
@@ -21,7 +22,7 @@ public class LunarLandingModel {
 
     private LunarLandingConfig currentConfig;
     private String[][] board;
-    private List<Observer< LunarLandingModel, Object> > observers;
+    private List<Observer<LunarLandingModel, Object>> observers;
     private String reloadFileName;
 
 
@@ -33,13 +34,15 @@ public class LunarLandingModel {
 
     }
 
-    public LunarLandingConfig returnConfig(){
+    public LunarLandingConfig returnConfig() {
         return currentConfig;
     }
-    public String[][] returnBoard(){
+
+    public String[][] returnBoard() {
         return currentConfig.returnBoard();
     }
-    public void load(String txtFile){
+
+    public void load(String txtFile) {
         LunarLandingConfig config = new LunarLandingConfig(txtFile);
         if (config.returnBoard() != null) {
             reloadFileName = txtFile;
@@ -49,26 +52,25 @@ public class LunarLandingModel {
         }
     }
 
-    public void reload(){
+    public void reload() {
         load(reloadFileName);
     }
 
-    public boolean choose(String data, int row, int col){
-        if(data.equals("-")||data.equals("!")){
+    public boolean choose(String data) {
+        if (data.equals("-") || data.equals("!")) {
             announce("chooseAgain");
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
 
-    public void go(String direction, int row, int col){
+    public void go(String direction, int row, int col) {
         int rDim = board.length;
         int cDim = board[0].length;
         boolean legal = false;
-        if(direction.equals("north")){
-           //will first check to see if it is a legal
+        if (direction.equals("north")) {
+            //will first check to see if it is a legal
             //checks up
             for (int i = row - 1; i > -1; i--) {
                 if (!board[i][col].equals("-")) {
@@ -106,12 +108,11 @@ public class LunarLandingModel {
                     }
                 }
             }
-            if(!legal){
+            if (!legal) {
                 announce("Illegal move");
             }
 
-        }
-        else if(direction.equals("south")){
+        } else if (direction.equals("south")) {
             //will first check to see if it is a legal
             //checks up
             for (int i = row + 1; i < rDim; i++) {
@@ -149,12 +150,11 @@ public class LunarLandingModel {
                     }
                 }
             }
-            if(!legal) {
+            if (!legal) {
                 announce("Illegal move");
             }
 
-        }
-        else if(direction.equals("east")){
+        } else if (direction.equals("east")) {
             //will first check to see if it is a legal
             //checks east
             for (int i = col + 1; i < cDim; i++) {
@@ -193,12 +193,11 @@ public class LunarLandingModel {
                     }
                 }
             }
-            if(!legal) {
+            if (!legal) {
                 announce("Illegal move");
             }
 
-        }
-        else if(direction.equals("west")){
+        } else if (direction.equals("west")) {
             //will first check to see if it is a legal
             //checks west
             for (int i = col - 1; i > -1; i--) {
@@ -237,27 +236,25 @@ public class LunarLandingModel {
                     }
                 }
             }
-            if(!legal) {
+            if (!legal) {
                 announce("Illegal move");
             }
 
         }
-        if(board[rDim/2][cDim/2].equals("!E")){
+        if (board[rDim / 2][cDim / 2].equals("!E")) {
             announce("win");
         }
     }
 
-    public void hint(){
+    public void hint() {
         int rDim = board.length;
         int cDim = board[0].length;
         List<Configuration> list = Solver.solve(currentConfig.updateConfig(board));
-        if(list.size() == 0){
+        if (list.size() == 0) {
             announce("unsolvable");
-        }
-        else if(list.size() == 1){
+        } else if (list.size() == 1) {
             announce("alreadySolved");
-        }
-        else {
+        } else {
             currentConfig = (LunarLandingConfig) list.get(1);
             board = currentConfig.returnBoard();
             if (board[rDim / 2][cDim / 2].equals("!E")) {
@@ -267,30 +264,40 @@ public class LunarLandingModel {
             }
         }
     }
+    public String unsolvable(){
+        return "Unsolvable board";
+    }
     public String hintWin() {
         return "I WIN!";
     }
-    public String win(){
+    public String win() {
         return "YOU WIN!";
     }
-    public String illegalMove(){
+
+    public String illegalMove() {
         return "Illegal move";
     }
-    public String alreadySolved(){
+
+    public String alreadySolved() {
         return "Already solved";
     }
-    public String chooseAgain(){
+
+    public String chooseAgain() {
         return "No figure at that position";
     }
-    public String fileLoaded(){
+
+    public String fileLoaded() {
         return "File loaded";
     }
-    public void help(){
+
+    public void help() {
         announce("help");
     }
-    public void quit(){
+
+    public void quit() {
         announce("quit");
     }
+
     public String displayHelp() {
         return "Legal commands are...\n" +
                 "\t> help : Show all commands.\n" +
@@ -303,12 +310,13 @@ public class LunarLandingModel {
                 "\t> quit";
     }
 
-    public void addObserver( Observer< LunarLandingModel, Object > obs ) {
+    public void addObserver(Observer<LunarLandingModel, Object> obs) {
         this.observers.add(obs);
     }
-    private void announce( String arg){
-        for ( var obs: this.observers ) {
-            obs.update(this,arg);
+
+    private void announce(String arg) {
+        for (var obs : this.observers) {
+            obs.update(this, arg);
         }
     }
 
