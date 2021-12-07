@@ -96,18 +96,13 @@ public class LunarLandingGUI extends Application
                 //removes lettering from the button
                 button.setText("");
                 buttonList.add(button);
-                //when button is pressed, this happens
                 button.setOnAction((event) -> {
                     top.setText("");
-                    boolean figureInPosition;
                     int pressedRow = button.getRow();
                     int pressedCol = button.getCol();
                     String data = button.getData();
-                    figureInPosition = model.choose(data);
-                    while (figureInPosition) {
+                    if (model.choose(data))
                         directionButton(data, pressedRow, pressedCol);
-                        figureInPosition = false;
-                    }
                 });
             }
         }
@@ -215,19 +210,14 @@ public class LunarLandingGUI extends Application
         vbox.setMargin(west, new Insets(0,25,0,0));
         vbox.setMargin(south, new Insets(0,0,0,34));
         BorderPane.setAlignment(vbox, Pos.CENTER_RIGHT);
+        // add the main pane to the scene and set some properties before showing it
+        Scene scene = new Scene(borderPane);
+        stage.setScene(scene);
+        stage.setTitle("Concentration");
+        stage.setWidth(606);
+        stage.setHeight(550);
+        stage.show();
 
-        north.setOnAction((event) -> {
-            model.choose("north");
-        });
-        south.setOnAction((event) -> {
-            model.choose("south");
-        });
-        east.setOnAction((event) -> {
-            model.choose("east");
-        });
-        west.setOnAction((event) -> {
-            model.choose("west");
-        });
         //load method triggers when reload button is pressed
         load.setOnAction((event) -> {
             FileChooser fileChooser = new FileChooser();
@@ -254,14 +244,6 @@ public class LunarLandingGUI extends Application
         hint.setOnAction((event) -> {
             model.hint();
         });
-
-        // add the main pane to the scene and set some properties before showing it
-        Scene scene = new Scene(borderPane);
-        stage.setScene(scene);
-        stage.setTitle("Concentration");
-        stage.setWidth(606);
-        stage.setHeight(550);
-        stage.show();
     }
 
     public void directionButton(String data, int row, int col) {

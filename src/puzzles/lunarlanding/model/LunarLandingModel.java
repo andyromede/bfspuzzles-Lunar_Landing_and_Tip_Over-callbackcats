@@ -105,6 +105,7 @@ public class LunarLandingModel {
 
                         }
                         announce("notwin");
+                        break;
                     }
                 }
             }
@@ -144,9 +145,9 @@ public class LunarLandingModel {
                             } else {
                                 board[i - 1][col] = temp;
                             }
-
                         }
                         announce("notwin");
+                        break;
                     }
                 }
             }
