@@ -339,10 +339,10 @@ public class TipOverConfig implements Configuration {
     @Override
     public String toString()
     {
-        String out = "";
+        StringBuilder out = new StringBuilder();
         for (int[] row : board)
-            out += "\n" + Arrays.toString(row);
-        out += "\n" + Arrays.toString(currCoords) + "\n" + Arrays.toString(goalCoords);
-        return out;
+            out.append("\n").append(Arrays.toString(row));
+        out.append("\n").append(Arrays.toString(currCoords)).append("\n").append(Arrays.toString(goalCoords));
+        return out.toString();
     }
 }

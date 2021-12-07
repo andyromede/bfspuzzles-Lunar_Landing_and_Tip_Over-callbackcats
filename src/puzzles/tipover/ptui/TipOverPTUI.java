@@ -4,10 +4,6 @@ import puzzles.tipover.model.TipOverConfig;
 import puzzles.tipover.model.TipOverModel;
 import util.Observer;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -16,28 +12,31 @@ import java.util.Scanner;
  * November 2021
  */
 public class TipOverPTUI implements Observer<TipOverModel, Object > {
-    private TipOverModel model;
-    private TipOverConfig config;
+    private final TipOverModel model;
+
     public static void main(String[] args ) {
         TipOverPTUI ptui = new TipOverPTUI(args[0]);
         ptui.run();
     }
     public TipOverPTUI(String filename)
     {
-        config = new TipOverConfig(filename);
+        TipOverConfig config = new TipOverConfig(filename);
         this.model = new TipOverModel(config, filename);
         initializeView();
     }
     public void run()
     {
         Scanner in = new Scanner(System.in);
-        for (; ; ) {
+        while (true) {
             System.out.print("> ");
             String line = in.nextLine();
             String[] fields = line.split("\\s+");
             try {
                 switch (fields[0].toLowerCase()) {
-                    case "quit" -> this.model.quit();
+                    case "quit" -> {
+                        this.model.quit();
+                        return; //Will never happen but just in case
+                    }
                     case "reload" -> this.model.reload();
                     case "load" -> this.model.load(fields[1]);
                     case "move" -> this.model.move(fields[1]);
@@ -86,30 +85,28 @@ public class TipOverPTUI implements Observer<TipOverModel, Object > {
         int[] tempLoc = board.getCurrCoords();
         int[] tempGoal = board.getGoalCoords();
         int[][] tempBoard = board.getBoard();
-        String s = "";
-        s += "\n";
-        s += "      " ;
+        StringBuilder s = new StringBuilder();
+        s.append("\n");
+        s.append("      ");
         for(int col = 0; col < tempBoard[0].length; col++){
-            s += col + "  ";
+            s.append(col).append("  ");
         }
-        s += "\n";
-        s += "    " ;
-        for(int col = 0; col < tempBoard[0].length; col++){
-            s += "___";
-        }
+        s.append("\n");
+        s.append("    ");
+        s.append("___".repeat(tempBoard[0].length));
         for (int i = 0; i < tempBoard.length; i++)
         {
-            s += "\n " + i + " | ";
+            s.append("\n ").append(i).append(" | ");
             for (int j = 0; j < tempBoard[0].length; j++) {
                 if (tempBoard[i][j] == 0)
-                    s += " _";
+                    s.append(" _");
                 else if (tempLoc[0] == i && tempLoc[1] == j)
-                    s += "*" + tempBoard[i][j];
+                    s.append("*").append(tempBoard[i][j]);
                 else if (tempGoal[0] == i && tempGoal[1] == j)
-                    s += "!" + tempBoard[i][j];
+                    s.append("!").append(tempBoard[i][j]);
                 else
-                    s += " " + tempBoard[i][j];
-                s += " ";
+                    s.append(" ").append(tempBoard[i][j]);
+                s.append(" ");
             }
         }
         System.out.println(s + "\n");

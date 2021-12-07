@@ -1,15 +1,11 @@
 package puzzles.tipover.model;
 
-import puzzles.lunarlanding.model.LunarLandingConfig;
-import puzzles.tipover.ptui.TipOverPTUI;
 import solver.Configuration;
 import solver.Solver;
 import util.Observer;
 
-import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * DESCRIPTION
@@ -19,7 +15,7 @@ import java.util.Locale;
 public class TipOverModel {
 
     private TipOverConfig currentConfig;
-    private LinkedList<Observer<TipOverModel, Object>> observers;
+    private final LinkedList<Observer<TipOverModel, Object>> observers;
     private String filename;
     public TipOverModel(TipOverConfig config, String filename)
     {
@@ -47,6 +43,8 @@ public class TipOverModel {
             this.filename = filename;
             System.out.println("New file loaded");
             announce("show");
+            if (currentConfig.isGoal())
+                announce("win");
         }
     }
     public void reload()
@@ -81,14 +79,15 @@ public class TipOverModel {
     }
     public void help()
     {
-        System.out.println("Legal commands are...\n" +
-                "\t> help : Show all commands.\n" +
-                "\t> move {north|south|east|west}: Go in given direction, possibly tipping a tower. (1 argument)\n" +
-                "\t> reload filename: Load the most recent file again.\n" +
-                "\t> load {board-file-name}: Load a new game board file. (1 argument)\n" +
-                "\t> hint Make the next move for me.\n" +
-                "\t> show Display the board.\n" +
-                "\t> quit");
+        System.out.println("""
+                Legal commands are...
+                \t> help : Show all commands.
+                \t> move {north|south|east|west}: Go in given direction, possibly tipping a tower. (1 argument)
+                \t> reload filename: Load the most recent file again.
+                \t> load {board-file-name}: Load a new game board file. (1 argument)
+                \t> hint Make the next move for me.
+                \t> show Display the board.
+                \t> quit""");
     }
     public void quit()
     {

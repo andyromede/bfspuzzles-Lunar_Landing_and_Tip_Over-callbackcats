@@ -1,15 +1,10 @@
 package puzzles.tipover;
 
-import puzzles.lunarlanding.model.LunarLandingConfig;
 import puzzles.tipover.model.TipOverConfig;
 import solver.Configuration;
 import solver.Solver;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * DESCRIPTION
