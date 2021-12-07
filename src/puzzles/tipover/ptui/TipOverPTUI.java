@@ -41,7 +41,7 @@ public class TipOverPTUI implements Observer<TipOverModel, Object > {
                     case "load" -> this.model.load(fields[1]);
                     case "move" -> this.model.move(fields[1]);
                     case "hint" -> this.model.hint();
-                    case "show" -> this.model.show();
+                    case "show" -> displayBoard(model.returnConfig());
                     case "help" -> this.model.help();
                     default -> {
                         System.out.println("Illegal command");
@@ -64,20 +64,12 @@ public class TipOverPTUI implements Observer<TipOverModel, Object > {
     public void update(TipOverModel tipOverModel, Object o) {
         switch ((String) o) {
             case "show", "hint" -> displayBoard(tipOverModel.returnConfig());
-            case "illegal" -> System.out.println("That move's illegal.");
+            case "invaliddir" -> System.out.println("Legal directions are\n[NORTH, EAST, SOUTH, WEST]");
             case "towertopple" -> {
                 System.out.println("A tower has been tipped over.");
                 displayBoard(tipOverModel.returnConfig());
             }
-            case "invaliddir" -> System.out.println("Legal directions are\n[NORTH, EAST, SOUTH, WEST]");
-            case "win" -> System.out.println("YOU WON!");
-            case "alreadywon" -> System.out.println("You arlready won!");
-            case "newFile" -> System.out.println("New file loaded.");
-            case "hintwin" -> System.out.println("I WON!");
-            case "unsolvable" -> {
-                System.out.println("Unsolvable board");
-                displayBoard(tipOverModel.returnConfig());
-            }
+            default -> System.out.println(o);
         }
     }
     private void displayBoard(TipOverConfig board)

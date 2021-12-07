@@ -201,12 +201,12 @@ public class TipOverConfig implements Configuration {
     public String movePlayer(String dir)
     {
         if (Arrays.equals(currCoords, goalCoords))
-            return "alreadywon";
+            return "You already won!";
         switch (dir.toLowerCase()) {
             case "south":
                 if (currCoords[0] + 1 >= board.length)
                 {
-                    return "illegal";
+                    return "No crate or tower there.";
                 }
                 else if (board[currCoords[0] + 1][currCoords[1]] != 0)
                 {
@@ -217,10 +217,10 @@ public class TipOverConfig implements Configuration {
                 {
                     for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--) {
                         if (currCoords[0] + i >= board.length) {
-                            return "illegal";
+                            return "No crate or tower there.";
                         }
                         else if (board[currCoords[0] + i][currCoords[1]] != 0) {
-                            return "illegal";
+                            return "No crate or tower there.";
                         }
                     }
                     for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--)
@@ -231,11 +231,11 @@ public class TipOverConfig implements Configuration {
                     currCoords[0] += 1;
                     return "towertopple";
                 }
-                return "illegal";
+                return "No crate or tower there.";
             case "north":
                 if (currCoords[0] - 1 < 0)
                 {
-                    return "illegal";
+                    return "No crate or tower there.";
                 }
                 else if (board[currCoords[0] - 1][currCoords[1]] != 0)
                 {
@@ -246,10 +246,10 @@ public class TipOverConfig implements Configuration {
                 {
                     for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--) {
                         if (currCoords[0] - i < 0) {
-                            return "illegal";
+                            return "No crate or tower there.";
                         }
                         else if (board[currCoords[0] - i][currCoords[1]] != 0) {
-                            return "illegal";
+                            return "No crate or tower there.";
                         }
                     }
                     for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--)
@@ -260,11 +260,11 @@ public class TipOverConfig implements Configuration {
                     currCoords[0] -= 1;
                     return "towertopple";
                 }
-                return "illegal";
+                return "No crate or tower there.";
             case "east":
                 if (currCoords[1] + 1 >= board[0].length)
                 {
-                    return "illegal";
+                    return "No crate or tower there.";
                 }
                 else if (board[currCoords[0]][currCoords[1] + 1] != 0)
                 {
@@ -275,10 +275,10 @@ public class TipOverConfig implements Configuration {
                 {
                     for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--) {
                         if (currCoords[1] + i >= board[0].length) {
-                            return "illegal";
+                            return "No crate or tower there.";
                         }
                         else if (board[currCoords[0]][currCoords[1] + i] != 0) {
-                            return "illegal";
+                            return "No crate or tower there.";
                         }
                     }
                     for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--)
@@ -289,11 +289,11 @@ public class TipOverConfig implements Configuration {
                     currCoords[1] += 1;
                     return "towertopple";
                 }
-                return "illegal";
+                return "No crate or tower there.";
             case "west":
                 if (currCoords[1] - 1 < 0)
                 {
-                    return "illegal";
+                    return "No crate or tower there.";
                 }
                 else if (board[currCoords[0]][currCoords[1] - 1] != 0)
                 {
@@ -304,10 +304,10 @@ public class TipOverConfig implements Configuration {
                 {
                     for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--) {
                         if (currCoords[1] - i >= board[0].length) {
-                            return "illegal";
+                            return "No crate or tower there.";
                         }
                         else if (board[currCoords[0]][currCoords[1] - i] != 0) {
-                            return "illegal";
+                            return "No crate or tower there.";
                         }
                     }
                     for (int i = board[currCoords[0]][currCoords[1]]; i > 0 ; i--)
@@ -318,12 +318,12 @@ public class TipOverConfig implements Configuration {
                     currCoords[1] -= 1;
                     return "towertopple";
                 }
-                return "illegal";
+                return "No crate or tower there.";
             default:
-                return "invaliddir";
+                return "towertopple";
         }
         if (Arrays.equals(currCoords, goalCoords))
-            return "win";
+            return "YOU WIN!";
         return "show";
     }
     public int[] getCurrCoords()

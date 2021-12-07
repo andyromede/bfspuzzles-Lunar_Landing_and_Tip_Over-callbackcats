@@ -41,10 +41,10 @@ public class TipOverModel {
         if (tempConfig.getBoard() != null) {
             currentConfig = tempConfig;
             this.filename = filename;
-            System.out.println("New file loaded");
+            announce("New file loaded.");
             announce("show");
             if (currentConfig.isGoal())
-                announce("win");
+                announce("YOU WON!");
         }
     }
     public void reload()
@@ -59,23 +59,19 @@ public class TipOverModel {
     {
         List<Configuration> list = Solver.solve(currentConfig);
         if(list.size() == 0){
-            announce("unsolvable");
+            announce("Unsolvable board");
+            announce("show");
         }
         else if(list.size() == 1){
-            announce("alreadywon");
+            announce("You already won.");
         }
         else {
             currentConfig = (TipOverConfig) list.get(1);
+            announce("show");
             if (currentConfig.isGoal()) {
-                announce("hintwin");
-            } else {
-                announce("hint");
+                announce("I WON!");
             }
         }
-    }
-    public void show()
-    {
-        announce("show");
     }
     public void help()
     {
