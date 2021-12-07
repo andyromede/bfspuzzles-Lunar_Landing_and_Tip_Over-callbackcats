@@ -2,24 +2,19 @@ package puzzles.lunarlanding.ptui;
 
 import puzzles.lunarlanding.model.LunarLandingConfig;
 import puzzles.lunarlanding.model.LunarLandingModel;
-import solver.Configuration;
-import solver.Solver;
 import util.Observer;
 
-import java.util.List;
 import java.util.Scanner;
 
 /**
- * DESCRIPTION
- * @author YOUR NAME HERE
+ * The plain text user interface for the LunarLanding model
+ * @author Andrew Le
  * November 2021
  */
 public class LunarLandingPTUI
         implements Observer<LunarLandingModel, Object> {
 
-    /**
-     * The model for the view and controller.
-     */
+    //the model and configuration of LunarLanding
     private LunarLandingModel model;
     private LunarLandingConfig config;
 
@@ -105,6 +100,7 @@ public class LunarLandingPTUI
         update(this.model, "notwin");
     }
 
+    //prints out the board
     private void displayBoard(LunarLandingConfig board) {
         System.out.println(board);
     }
@@ -124,6 +120,14 @@ public class LunarLandingPTUI
                 "\t> quit");
     }
 
+    /**
+     * a method which updates the view after every press of any button. it does this
+     * by receiving the current model as the parameter and the controller updates the view
+     * with the data it has received from the model
+     *
+     * @param lunarLandingModel a model which manages data, logic, and rules
+     * @param o an argument which tells the view what should change
+     */
     @Override
     public void update(LunarLandingModel lunarLandingModel, Object o) {
         if(o.equals("notwin")) {

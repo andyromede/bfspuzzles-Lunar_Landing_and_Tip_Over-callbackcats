@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 /**
- * DESCRIPTION
+ * The LunarLanding model contains the data and the logic of the entire game
  *
  * @author Andrew Le
  * November 2021
@@ -25,13 +25,14 @@ public class LunarLandingModel {
     private List<Observer<LunarLandingModel, Object>> observers;
     private String reloadFileName;
 
-
+    /**
+     * Constructor for the model of a LunarLanding game.
+     */
     public LunarLandingModel(LunarLandingConfig config, String reloadFileName) {
         this.observers = new LinkedList<>();
         currentConfig = config;
         this.board = currentConfig.returnBoard();
         this.reloadFileName = reloadFileName;
-
     }
 
     public LunarLandingConfig returnConfig() {
@@ -71,7 +72,7 @@ public class LunarLandingModel {
         boolean legal = false;
         if (direction.equals("north")) {
             //will first check to see if it is a legal
-            //checks up
+            //checks north
             for (int i = row - 1; i > -1; i--) {
                 if (!board[i][col].equals("-")) {
                     if (this.board[i][col].equals("!")) {
@@ -102,7 +103,6 @@ public class LunarLandingModel {
                                 board[i + 1][col] = temp;
 
                             }
-
                         }
                         announce("notwin");
                         break;
@@ -115,7 +115,7 @@ public class LunarLandingModel {
 
         } else if (direction.equals("south")) {
             //will first check to see if it is a legal
-            //checks up
+            //checks south
             for (int i = row + 1; i < rDim; i++) {
                 if (!board[i][col].equals("-")) {
                     if (this.board[i][col].equals("!")) {
@@ -240,20 +240,27 @@ public class LunarLandingModel {
             if (!legal) {
                 announce("Illegal move");
             }
-
         }
         if (board[rDim / 2][cDim / 2].equals("!E")) {
             announce("win");
         }
     }
 
+    /**
+     * This method creates a instance of a solver solves the entire configuration, it then takes the first
+     * step from the solver list and makes that configuration the new board
+     */
     public void hint() {
         int rDim = board.length;
         int cDim = board[0].length;
+        //uses the solver to solve the entire config
         List<Configuration> list = Solver.solve(currentConfig.updateConfig(board));
+        //if the list is empty then it shows that the config is unsolvable
         if (list.size() == 0) {
             announce("unsolvable");
-        } else if (list.size() == 1) {
+        }
+        //if the list is only one in size then it shows that the config is already solved
+        else if (list.size() == 1) {
             announce("alreadySolved");
         } else {
             currentConfig = (LunarLandingConfig) list.get(1);
@@ -265,40 +272,38 @@ public class LunarLandingModel {
             }
         }
     }
+    //announces the PTUI to print help
+    public void help() {
+        announce("help");
+    }
+
+    //announces the PTUI to quit
+    public void quit() {
+        announce("quit");
+    }
+
+    //a list of methods that is used to communicate between the model and the GUI or PTUI for MVC purposes
+    public String win() {
+        return "YOU WIN!";
+    }
     public String unsolvable(){
         return "Unsolvable board";
     }
     public String hintWin() {
         return "I WIN!";
     }
-    public String win() {
-        return "YOU WIN!";
-    }
-
     public String illegalMove() {
         return "Illegal move";
     }
-
     public String alreadySolved() {
         return "Already solved";
     }
-
     public String chooseAgain() {
         return "No figure at that position";
     }
-
     public String fileLoaded() {
         return "File loaded";
     }
-
-    public void help() {
-        announce("help");
-    }
-
-    public void quit() {
-        announce("quit");
-    }
-
     public String displayHelp() {
         return "Legal commands are...\n" +
                 "\t> help : Show all commands.\n" +
@@ -311,10 +316,19 @@ public class LunarLandingModel {
                 "\t> quit";
     }
 
+    /**
+     * Add a new observer to the list for this model
+     * @param obs an object that wants an
+     *            {@link Observer#update(Object, Object)}
+     *            when something changes here
+     */
     public void addObserver(Observer<LunarLandingModel, Object> obs) {
         this.observers.add(obs);
     }
 
+    /**
+     * Announce to observers the model has changed;
+     */
     private void announce(String arg) {
         for (var obs : this.observers) {
             obs.update(this, arg);

@@ -17,11 +17,12 @@ import javafx.stage.Stage;
 import puzzles.lunarlanding.model.LunarLandingConfig;
 import puzzles.lunarlanding.model.LunarLandingModel;
 import util.Observer;
+
 import java.io.File;
 import java.util.ArrayList;
 
 /**
- * DESCRIPTION
+ * The graphic user interface for the LunarLanding Model which contains the controller and view of the game
  *
  * @author Andrew Le
  * November 2021
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 public class LunarLandingGUI extends Application
         implements Observer<LunarLandingModel, Object> {
 
+    //the stage
     private static Stage stage;
     //the config
     private static LunarLandingConfig config;
@@ -96,13 +98,18 @@ public class LunarLandingGUI extends Application
                 //removes lettering from the button
                 button.setText("");
                 buttonList.add(button);
+                //when button is pressed, this happens
                 button.setOnAction((event) -> {
                     top.setText("");
+                    boolean figureInPosition;
                     int pressedRow = button.getRow();
                     int pressedCol = button.getCol();
                     String data = button.getData();
-                    if (model.choose(data))
-                        directionButton(data, pressedRow, pressedCol);
+                    figureInPosition = model.choose(data);
+                    while (figureInPosition) {
+                        directionButton(pressedRow, pressedCol);
+                        figureInPosition = false;
+                    }
                 });
             }
         }
@@ -110,9 +117,11 @@ public class LunarLandingGUI extends Application
         return gridPane;
     }
 
+    /**
+     * the model and the GUI are connected with an observer
+     */
     @Override
     public void init() throws Exception {
-        System.out.println("init: initialize and connect to model!");
         model.addObserver(this);
     }
 
@@ -121,6 +130,7 @@ public class LunarLandingGUI extends Application
         //the position of the button
         private int row;
         private int col;
+        //the data and image
         private String data;
         private Image figure;
 
@@ -137,18 +147,12 @@ public class LunarLandingGUI extends Application
             this.col = col;
             if (!data.equals("-")) {
                 if (data.equals("!")) {
-
                 } else if (data.contains("E")) {
                     figure = explorer;
                 } else {
                     figure = robotBlue;
                 }
             }
-
-        }
-
-        public FigureButton returnButton(int row, int col) {
-            return this;
         }
 
         //returns the row
@@ -195,30 +199,26 @@ public class LunarLandingGUI extends Application
         Button hint = new Button("Hint");
         vbox.getChildren().addAll(north, east, west, south, load, reload, hint);
         borderPane.setRight(vbox);
+        //load, reload, and hint buttons are sized correctly
         load.setMinSize(87, 25);
         load.setFont(vboxFont);
         reload.setMinSize(75, 25);
         reload.setFont(vboxFont);
-        hint.setMinSize(87,25 );
+        hint.setMinSize(87, 25);
         hint.setFont(vboxFont);
+        //the directional buttons text fonts are sized
         north.setFont(directionFont);
         east.setFont(directionFont);
         west.setFont(directionFont);
         south.setFont(directionFont);
-        vbox.setMargin(north, new Insets(0,0,0,33));
-        vbox.setMargin(east, new Insets(0,10,-32,62));
-        vbox.setMargin(west, new Insets(0,25,0,0));
-        vbox.setMargin(south, new Insets(0,0,0,34));
+        //the direction buttons are given the proper margins
+        vbox.setMargin(north, new Insets(0, 0, 0, 33));
+        vbox.setMargin(east, new Insets(0, 10, -32, 62));
+        vbox.setMargin(west, new Insets(0, 25, 0, 0));
+        vbox.setMargin(south, new Insets(0, 0, 0, 34));
         BorderPane.setAlignment(vbox, Pos.CENTER_RIGHT);
-        // add the main pane to the scene and set some properties before showing it
-        Scene scene = new Scene(borderPane);
-        stage.setScene(scene);
-        stage.setTitle("Concentration");
-        stage.setWidth(606);
-        stage.setHeight(550);
-        stage.show();
 
-        //load method triggers when reload button is pressed
+        //load method triggers when load button is pressed
         load.setOnAction((event) -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open Resource File");
@@ -244,33 +244,52 @@ public class LunarLandingGUI extends Application
         hint.setOnAction((event) -> {
             model.hint();
         });
+
+        //adds the main pane to the scene and set some properties before showing it
+        Scene scene = new Scene(borderPane);
+        stage.setScene(scene);
+        stage.setTitle("Concentration");
+        stage.setWidth(606);
+        stage.setHeight(550);
+        stage.show();
     }
 
-    public void directionButton(String data, int row, int col) {
+    /**
+     * the lambda expressions for the direction buttons once a button on the grid is pressed
+     *
+     * @param row row of the position of the button
+     * @param col col of the position of the button
+     */
+    public void directionButton(int row, int col) {
         north.setOnAction((event) -> {
-            System.out.println("works n");
             model.go("north", row, col);
             return;
         });
         south.setOnAction((event) -> {
-            System.out.println("works s");
             model.go("south", row, col);
             return;
         });
         east.setOnAction((event) -> {
-            System.out.println("works e ");
             model.go("east", row, col);
             return;
         });
         west.setOnAction((event) -> {
-            System.out.println("works w");
             model.go("west", row, col);
             return;
         });
     }
 
+    /**
+     * a method which updates the view after every press of any button. it does this
+     * by receiving the current model as the parameter and the controller updates the view
+     * with the data it has received from the model
+     *
+     * @param lunarLandingModel a model which manages data, logic, and rules
+     * @param o an argument which tells the view what should change
+     */
     @Override
     public void update(LunarLandingModel lunarLandingModel, Object o) {
+        //updates the board based off the new data
         String[][] board = lunarLandingModel.returnBoard();
         for (int i = 0; i < buttonList.size(); i++) {
             FigureButton temp = buttonList.get(i);
@@ -288,6 +307,7 @@ public class LunarLandingGUI extends Application
             }
             temp.setData(board[temp.getRow()][temp.getCol()]);
         }
+        //the arguments take in from the parameter which will tell the view what should change
         if (o.equals("chooseAgain")) {
             top.setText(model.chooseAgain());
         }
@@ -303,15 +323,22 @@ public class LunarLandingGUI extends Application
         if (o.equals("alreadySolved")) {
             top.setText(model.alreadySolved());
         }
-        if (o.equals("unsolvable")){
+        if (o.equals("unsolvable")) {
             top.setText(model.unsolvable());
         }
     }
 
+    /**
+     * main entry point launches the JavaFX GUI.
+     *
+     * @param args the input file
+     */
     public static void main(String[] args) {
+        //the filename is stored to the config, model, and filename variables
         config = new LunarLandingConfig(args[0]);
         model = new LunarLandingModel(config, args[0]);
         filename = args[0];
+        //the GUI is created
         Application.launch(args[0]);
     }
 }

@@ -1,20 +1,20 @@
 package puzzles.lunarlanding.model;
 
-import puzzles.lunarlanding.ptui.LunarLandingPTUI;
 import solver.Configuration;
-import solver.Solver;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * DESCRIPTION
+ * The LunarLandingConfig implements the Configuration class and represents a board game called LunarLanding
+ *
  * @author Andrew Le
  * November 2021
  */
 public class LunarLandingConfig implements Configuration {
-    //a board
+
+    //a game board
     private String[][] board;
     //dimension of the board
     private static int rDim;
@@ -22,11 +22,8 @@ public class LunarLandingConfig implements Configuration {
     //lunar lander coordinates
     private static int rCor;
     private static int cCor;
-    //cursor
-    private int row;
-    private int col;
-    public LunarLandingConfig(String filename)
-    {
+
+    public LunarLandingConfig(String filename) {
         try (Scanner in = new Scanner(new File(filename))) {
             // creates the rows and columns
             String[] line = in.nextLine().split("\\s");
@@ -37,12 +34,12 @@ public class LunarLandingConfig implements Configuration {
             ArrayList<String> figureList = new ArrayList<>();
             //goes through the second line and beyond and adds the figures to a list of figures
             String temp = in.nextLine();
-            while(in.hasNext() && !temp.isEmpty()) {
+            while (in.hasNext() && !temp.isEmpty()) {
                 figureList.add(temp);
                 temp = in.nextLine();
             }
             board = new String[rDim][cDim];
-            for(int row = 0; row< rDim; row++) {
+            for (int row = 0; row < rDim; row++) {
                 for (int col = 0; col < cDim; col++) {
                     board[row][col] = "-";
                 }
@@ -58,16 +55,15 @@ public class LunarLandingConfig implements Configuration {
                     board[figureRow][figureCol] = fields[0];
                 }
             }
-            //LunarLandingPTUI ptui = new LunarLandingPTUI();
         } // try-with-resources, the file is closed automatically
-        catch(FileNotFoundException e){
+        catch (FileNotFoundException e) {
             System.out.println("Error: Invalid File Destination");
 
-        }
-        catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Error: Invalid File Format");
         }
     }
+
     /**
      * The copy constructor takes a config, other, and makes a full "deep" copy
      * of its instance data.
@@ -77,49 +73,63 @@ public class LunarLandingConfig implements Configuration {
     protected LunarLandingConfig(LunarLandingConfig other) {
         //copies the other board so both this and other don't point to the same reference
         this.board = new String[rDim][cDim];
-        for(int row = 0; row < rDim; row++){
+        for (int row = 0; row < rDim; row++) {
             System.arraycopy(other.board[row], 0, this.board[row], 0, cDim);
         }
     }
 
-    public LunarLandingConfig updateConfig(String[][] otherBoard){
-        for(int row = 0; row< rDim; row++) {
+    /**
+     * the method copies THIS board with the otherboard in order to update the data
+     *
+     * @param otherBoard a board
+     */
+    public LunarLandingConfig updateConfig(String[][] otherBoard) {
+        for (int row = 0; row < rDim; row++) {
             for (int col = 0; col < cDim; col++) {
                 this.board[row][col] = otherBoard[row][col];
             }
         }
         return this;
     }
-    public String[][] returnBoard(){
+
+    /**
+     * @returns a board from the configuration
+     */
+    public String[][] returnBoard() {
         return board;
     }
+
+    /**
+     * a method where the successors of a LunarLandingConfig is returned. It does this by returning a linked list
+     * of successors
+     *
+     * @return a list of configuration that are successors to LunarLandingConfig
+     */
     @Override
     public Collection<Configuration> getSuccessors() {
         //a new linked list is created which will hold its successors
         LinkedList<Configuration> successor = new LinkedList<>();
 
         //a for loop is created to go through the board
-        for(int row = 0; row< rDim; row++){
-            for(int col = 0; col < cDim; col++) {
+        for (int row = 0; row < rDim; row++) {
+            for (int col = 0; col < cDim; col++) {
                 //checks if the cursor hits a figure, ignores "-"
-                if(!this.board[row][col].equals("-")){
+                if (!this.board[row][col].equals("-")) {
                     //if the cursor hits a figure then it will check for its cardinal directions to see if there is
                     //another figure in the board
 
                     //checks if the cursor contains an "!"
-                    if(this.board[row][col].equals("!")){
+                    if (this.board[row][col].equals("!")) {
                         //do nothing if the cursor is equal to "!"
-                    }
-                    else {
+                    } else {
                         //checks up
                         for (int i = row - 1; i > -1; i--) {
                             //checks if the cursor index ahead is not equal to - or equals to !
                             //if it does, then code will execute
                             if (!board[i][col].equals("-")) {
-                                if(this.board[i][col].equals("!")){
+                                if (this.board[i][col].equals("!")) {
                                     //do nothing if the cursor is equal to "!"
-                                }
-                                else {
+                                } else {
                                     //a copy constructor of the config is created
                                     LunarLandingConfig other = new LunarLandingConfig(this);
                                     //saves the character as a temp variable
@@ -127,7 +137,7 @@ public class LunarLandingConfig implements Configuration {
                                     //else, it will just take the letter
                                     String temp = "";
                                     //has a "!"
-                                    if(other.board[row][col].length() == 2){
+                                    if (other.board[row][col].length() == 2) {
                                         temp = other.board[row][col].substring(1);
                                         other.board[row][col] = "!";
                                         if (other.board[i + 1][col].equals("!")) {
@@ -160,11 +170,9 @@ public class LunarLandingConfig implements Configuration {
                         //check down
                         for (int i = row + 1; i < rDim; i++) {
                             if (!board[i][col].equals("-")) {
-                                if(this.board[i][col].equals("!")){
+                                if (this.board[i][col].equals("!")) {
                                     //do nothing if the cursor is equal to "!"
-//
-                                }
-                                else {
+                                } else {
                                     //a copy constructor of the config is created
                                     LunarLandingConfig other = new LunarLandingConfig(this);
                                     //saves the character as a temp variable
@@ -172,7 +180,7 @@ public class LunarLandingConfig implements Configuration {
                                     //else, it will just take the letter
                                     String temp = "";
                                     //if original location has a letter and a "!"
-                                    if(other.board[row][col].length() == 2){
+                                    if (other.board[row][col].length() == 2) {
                                         temp = other.board[row][col].substring(1);
                                         other.board[row][col] = "!";
                                         if (other.board[i - 1][col].equals("!")) {
@@ -193,7 +201,6 @@ public class LunarLandingConfig implements Configuration {
                                         } else {
                                             other.board[i - 1][col] = temp;
                                         }
-
                                     }
                                     //the successor is then added to the list
                                     successor.add(other);
@@ -207,8 +214,7 @@ public class LunarLandingConfig implements Configuration {
                             if (!board[row][i].equals("-")) {
                                 if (this.board[row][i].equals("!")) {
                                     //do nothing if the cursor is equal to "!"
-                                }
-                                else {
+                                } else {
                                     //a copy constructor of the config is created
                                     LunarLandingConfig other = new LunarLandingConfig(this);
                                     //saves the character as a temp variable
@@ -251,8 +257,7 @@ public class LunarLandingConfig implements Configuration {
                             if (!board[row][i].equals("-")) {
                                 if (this.board[row][i].equals("!")) {
                                     //do nothing if the cursor is equal to "!"
-                                }
-                                else {
+                                } else {
                                     //a copy constructor of the config is created
                                     LunarLandingConfig other = new LunarLandingConfig(this);
                                     //saves the character as a temp variable
@@ -260,13 +265,13 @@ public class LunarLandingConfig implements Configuration {
                                     //else, it will just take the letter
                                     String temp = "";
                                     //has a "!"
-                                    if(other.board[row][col].length() == 2){
+                                    if (other.board[row][col].length() == 2) {
                                         temp = other.board[row][col].substring(1);
                                         other.board[row][col] = "!";
-                                        if (other.board[row][i-1].equals("!")) {
-                                            other.board[row][i-1] = "!" + temp;
+                                        if (other.board[row][i - 1].equals("!")) {
+                                            other.board[row][i - 1] = "!" + temp;
                                         } else {
-                                            other.board[row][i-1] = temp;
+                                            other.board[row][i - 1] = temp;
                                         }
                                     }
                                     //just the letter
@@ -276,10 +281,10 @@ public class LunarLandingConfig implements Configuration {
                                         //the figure
                                         other.board[row][col] = "-";
                                         //if the index in front of the figure has a lunar lander ("!"), then they get stuck together ex:(!E)
-                                        if (other.board[row][i-1].equals("!")) {
-                                            other.board[row][i-1] = "!" + temp;
+                                        if (other.board[row][i - 1].equals("!")) {
+                                            other.board[row][i - 1] = "!" + temp;
                                         } else {
-                                            other.board[row][i-1] = temp;
+                                            other.board[row][i - 1] = temp;
                                         }
 
                                     }
@@ -298,17 +303,17 @@ public class LunarLandingConfig implements Configuration {
     }
 
     /**
-     *  Two LunarLandingConfigs are equal if they have the same board.
+     * Two LunarLandingConfigs are equal if they have the same board.
      *
-     *  @param other The other object to check equality with
-     *  @return true if equal; false otherwise
+     * @param other The other object to check equality with
+     * @return true if equal; false otherwise
      */
     @Override
-    public boolean equals(Object other){
+    public boolean equals(Object other) {
         boolean result = true;
         if (other instanceof LunarLandingConfig) {
             LunarLandingConfig o = (LunarLandingConfig) other;
-            for(int row = 0; row< rDim; row++) {
+            for (int row = 0; row < rDim; row++) {
                 for (int col = 0; col < cDim; col++) {
                     if (!this.board[row][col].equals(o.board[row][col])) {
                         result = false;
@@ -320,6 +325,9 @@ public class LunarLandingConfig implements Configuration {
         return result;
     }
 
+    /**
+     * @return a boolean if the lunar lander coordinates contains the explorer
+     */
     @Override
     public boolean isGoal() {
         return board[rCor][cCor].equals("!E");
@@ -329,31 +337,33 @@ public class LunarLandingConfig implements Configuration {
      * @return a hashcode which consists of using the hashcode method on the board
      */
     @Override
-    public int hashCode(){
-        //System.out.println(board.hashCode());
+    public int hashCode() {
         return Arrays.deepHashCode(board);
     }
+
+    /**
+     * @return a toString representation of the board
+     */
     @Override
     public String toString() {
         String s = "";
         s += "\n";
-        s += "  " ;
-        for(int col = 0; col < cDim; col++){
+        s += "  ";
+        for (int col = 0; col < cDim; col++) {
             s += "  " + col;
         }
         s += "\n";
-        s += "   " ;
-        for(int col = 0; col < cDim; col++){
+        s += "   ";
+        for (int col = 0; col < cDim; col++) {
             s += "---";
         }
-        for(int row = 0; row< rDim; row++) {
+        for (int row = 0; row < rDim; row++) {
             s += "\n";
             s += row + " | ";
             for (int col = 0; col < cDim; col++) {
-                if(board[row][col] == null){
+                if (board[row][col] == null) {
                     s += "-" + "   ";
-                }
-                else
+                } else
                     s += board[row][col] + "  ";
             }
         }
